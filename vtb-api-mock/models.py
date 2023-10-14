@@ -144,25 +144,24 @@ class Operation(db.Model):
 
 
 class Coupon(db.Model):
-    num = db.Column(db.Integer, nullable=False)  # ограничения на 3 цифры
+    id = db.Column(db.Integer, primary_key=True)
+    num = db.Column(db.Integer)  # ограничения на 3 цифры заполняется у них
     created = db.Column(db.DateTime(timezone=True), nullable=False, server_default=func.now())
     benefits = db.Column(db.Boolean, nullable=False, default=False)
-    operation_id = db.Column(db.Integer, db.ForeignKey('operation.id'), nullable=False)
+    operation_id = db.Column(db.Integer, db.ForeignKey('operation.id'))
 
     def __init__(self, created=None, operation_id=None):
-        all_coupon = Coupon.query.all()
-        if all_coupon.count() == 0:
-            self.num = 0
-        elif all_coupon.sort('-self.num').first() > 999:
+
+        if len(Coupon.query.all()) == 0 or Coupon.query.order_by(self.num).first().num > 999:
             self.num = 0
         else:
-            self.num = all_coupon.sort('-self.num').first() + 1
+            self.num = Coupon.query.order_by(self.num).first().num + 1
         self.operation_id = operation_id
         if created is not None:
             self.created = created
 
     def __repr__(self):
-        return f'{SERVICE_CHOICES[self.service_type]}{self.num}'
+        return f'{SERVICE_CHOICES[self.service_type]}'
 
 
 

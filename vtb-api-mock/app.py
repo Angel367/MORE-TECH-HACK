@@ -1,14 +1,17 @@
+import json
+
 from flask import Flask, jsonify, request
 from models import *
-
+from generate import create_data
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
-
 db.init_app(app)
+app.json.ensure_ascii = False
+
 
 @app.route('/operations', methods=['GET'])
-def get_operation():
-    coupons = Operation.query.all()
+def get_operations():
+    coupons = Operation.query.order_by('office_id', "service_type")
     coupons_dict = [coupon.__dict__ for coupon in coupons]
     for coupon_dict in coupons_dict:
         coupon_dict.pop('_sa_instance_state')
@@ -16,7 +19,7 @@ def get_operation():
 
 
 @app.route('/operations/<int:id_operation>', methods=['GET'])
-def get_coupon(id_operation):
+def get_operation(id_operation):
     coupon = Operation.query.get(id_operation)
     if coupon is None:
         return jsonify({'message': 'Операция не найдена'}), 404
@@ -41,9 +44,33 @@ def create_operation():
     coupon_dict.pop('_sa_instance_state')
     return jsonify(coupon_dict), 201
 
+
 @app.route('/coupons', methods=['GET'])
 def get_coupons():
     coupons = Coupon.query.all()
+    coupons_dict = [coupon.__dict__ for coupon in coupons]
+    for coupon_dict in coupons_dict:
+        coupon_dict.pop('_sa_instance_state')
+    return jsonify(coupons_dict)
+
+
+@app.route('/offices_with_details/offices', methods=['GET'])
+def get_offices_with_details_offices():
+    json_file = 'offices.json'
+    with open(json_file, encoding="utf8") as json_data:
+        return json.load(json_data)
+
+
+@app.route('/offices_with_details/atms', methods=['GET'])
+def get_offices_with_details_atms():
+    json_file = 'atms.json'
+    with open(json_file, encoding="utf8") as json_data:
+        return json.load(json_data)
+
+
+@app.route('/offices', methods=['GET'])
+def get_offices():
+    coupons = Office.query.all()
     coupons_dict = [coupon.__dict__ for coupon in coupons]
     for coupon_dict in coupons_dict:
         coupon_dict.pop('_sa_instance_state')
@@ -111,6 +138,20 @@ def get_windows():
 #     for coupon_dict in coupons_dict:
 #         coupon_dict.pop('_sa_instance_state')
 #     return jsonify(coupons_dict)
+@app.route('/offices/<int:office_id>/managers', methods=['GET'])
+def get_managers_by_id_office(office_id):
+    managers = Manager.query.filter_by(office_id=office_id)
+    windows = AppointmentWindow.query.order_by('date_time_appointment')
+    manager_dict = [window.__dict__ for window in managers]
+    windows_dict = [window.__dict__ for window in windows]
+    for coupon_dict in windows_dict:
+        coupon_dict.pop('_sa_instance_state')
+    for coupon_dict in manager_dict:
+        coupon_dict.pop('_sa_instance_state')
+        coupon_dict.update({"windows": [dict(window) for window in windows_dict
+                                        if window["manager_id"] == coupon_dict["id"]]})
+
+    return jsonify(manager_dict)
 
 
 @app.route('/appointments/<int:id_appointment>', methods=['GET'])
