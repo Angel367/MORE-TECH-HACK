@@ -39,6 +39,7 @@
 
 .radio__custom{
 	position: relative;
+	flex-shrink: 0;
 	width: 30px;
 	height: 30px;
 	border-radius: 50%;
@@ -77,6 +78,7 @@
 
 .checkbox__custom{
 	overflow: hidden;
+	
 	width: 60px;
 	height: 30px;
 	border-radius: 30px;
@@ -126,6 +128,7 @@
 	max-width: 325px;
 	height: 40px;
 	padding: 10px;
+	border: transparent;
 	border-radius: 8px;
 	color: white;
 	background-color: var(--color-blue);
@@ -173,3 +176,21 @@
 	background-color: var(--color-text);
 }
 
+.button--fix{
+	max-width: 120px;
+	height: 50px;
+	margin: 0;
+	padding: 5px;
+}
+
+
+.cross{
+	display: block;
+	transition: all ease-in .3s;
+}
+
+@media (min-width: 1024px) {
+	.cross:hover{
+		transform: scale(1.1);
+	}
+}

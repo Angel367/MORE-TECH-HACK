@@ -51,33 +51,6 @@ for item in source_json:
     services = [key for key, value in item.items() if value == "Y"]
     res = []
     address = item["address"]
-
-
-    # for ohi in item['openHoursIndividual']:
-    #     if '-' in ohi["days"]:
-    #         # Разделение диапазона дней недели
-    #         start_day, end_day = ohi["days"].split('-')
-    #         start_day_idx = list_week[start_day.strip()]
-    #         end_day_idx = list_week[end_day.strip()]
-    #
-    #         for day_idx in range(start_day_idx, end_day_idx + 1):
-    #             res_item = {
-    #                 'day': day_idx,
-    #                 'open_hour': list_time_interval[ohi["hours"][:5]],
-    #                 'close_hour': list_time_interval[ohi["hours"][-5:]]
-    #             }
-    #             res.append(res_item)
-    #     else:
-    #         # Разделение дней недели, указанных через запятую
-    #         days = ohi["days"].split(',')
-    #         for day in days:
-    #             res_item = {
-    #                 'day': list_week[day.strip()],
-    #                 'open_hour': list_time_interval[ohi["hours"][:5]],
-    #                 'close_hour': list_time_interval[ohi["hours"][-5:]]
-    #             }
-    #             res.append(res_item)
-    # Функция для разделения дней недели в формате "пн-пт" на отдельные дни
     def expand_days(day_range):
         days = []
         if ',' in day_range:

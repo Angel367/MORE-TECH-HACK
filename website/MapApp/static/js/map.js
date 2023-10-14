@@ -1,4 +1,5 @@
 let userStatus = null;
+let havQueue = false;
 
 const buttonEnter = document.querySelector('.button--enter');
 const buttonQueue = document.querySelector('.button--queue');
@@ -12,28 +13,34 @@ function start() {
 
 start();
 
-const buttonPoint = document.querySelector('.button--point');
-
 buttonEnter.onclick = () => {
-    userStatus = "F";
-    buttonEnter.classList.remove('active');
-    buttonQueue.classList.add('active')
-    buttonExit.classList.add('active');
-    if (userStatus == "L") {
-        buttonSingLeg.classList.add('active');
-    }
-    if (userStatus == "F") {
-        buttonSingInd.classList.add('active');
-    }
+	userStatus = "F";
+	buttonEnter.classList.remove('active');
+	buttonQueue.classList.add('active')
+	buttonExit.classList.add('active');
+	if (userStatus == "L"){
+		buttonSingLeg.classList.add('active');
+	}
+	if (userStatus == "F") {
+		buttonSingInd.classList.add('active');
+	}
 }
 
 buttonExit.onclick = () => {
-    userStatus = "F";
-    buttonEnter.classList.add('active');
-    buttonQueue.classList.remove('active')
-    buttonExit.classList.remove('active');
-    buttonSingLeg.classList.remove('active');
-    buttonSingInd.classList.remove('active');
+	userStatus = null;
+	buttonEnter.classList.add('active');
+	buttonQueue.classList.remove('active')
+	buttonExit.classList.remove('active');
+	buttonSingLeg.classList.remove('active');
+	buttonSingInd.classList.remove('active');
+
+
+	filterBlock.classList.remove('active');
+	singIndiv = false;
+
+	document.querySelector('.info__form--legal').classList.remove('active');
+	document.querySelector('.info__form--individual').classList.remove('active');
+
 }
 
 const radioAtms = document.querySelector('.header__radio-real--atms');
@@ -60,6 +67,20 @@ document.querySelector('.point__item--example').onclick = () => {
     }
 }
 
+document.querySelector('.point__item--example').onclick = () => {
+	if (!infoBlock.classList.contains('active')){
+		infoBlock.classList.add('active');
+		document.querySelector('.info__form--legal').classList.remove('active');
+		document.querySelector('.info__form--individual').classList.remove('active');
+		if (singIndiv) {
+			document.querySelector('.info__form--individual').classList.add('active');
+		}
+		if (singLegal) {
+			document.querySelector('.info__form--legal').classList.add('active');
+		}
+	}
+}
+
 infoArrow.onclick = () => {
     infoBlock.classList.remove('active');
 }
@@ -72,7 +93,6 @@ function update_point__list(map, objects, userCoords) {
     let point_list = document.querySelector('.point__list')
     if (userCoords == null) userCoords = [55.753215, 37.622504]
     point_list.innerHTML = ''
-    console.log(("WW" + userCoords))
     let objects_to_point__list = []
     for (let object of objects) {
         let distance_from_mapCenter = Math.round(ymaps.coordSystem.geo.getDistance(object.geometry.coordinates, map.getCenter()))
@@ -83,9 +103,10 @@ function update_point__list(map, objects, userCoords) {
     objects_to_point__list.sort(function (a, b) {
     return a.distance_from_user - b.distance_from_user;
     });
-    console.log(objects_to_point__list)
+	console.log(objects_to_point__list)
     for (let object of objects_to_point__list) {
-        point_list.innerHTML += `<li class="point__item"><img class="point__item-work" src={% static "images/work/0.svg" %} alt=""><p class="point__item-text">` + object['object'].address + `</p><p class="point__item-distance">`+object['distance_from_user']+`'м</p></li>'`
+        let image_num = 2
+        point_list.insertAdjacentHTML("beforeend", `<li class="point__item"><img class="point__item-work" src="static/images/work/`+image_num+`.svg" alt=""><p class="point__item-text">` + object['object'].address + `</p><p class="point__item-distance">`+object['distance_from_user']+`м</p></li>`)
     }
 }
 
@@ -111,7 +132,6 @@ function init() {
     objectManager.objects.options.set("iconContentOffset", [15, 15])
     objectManager.objects.events.add('click', function (event) {
         let obj = objectManager.objects.getById(event.get('objectId'))
-        console.log("obj" + obj)
     })
     myMap.geoObjects.add(objectManager);
 
@@ -144,8 +164,6 @@ function init() {
                     objectsInRectangle.push(object);
                 }
             }
-            console.log(objectsInRectangle)
-            console.log(myMap.getBounds())
             update_point__list(myMap, objectsInRectangle, position)
         }
     });
@@ -154,7 +172,6 @@ function init() {
     });
     geolocationControl.events.add('locationchange', function (event) {
         position = event.get('position')
-        console.log(position)
         myMap.panTo(position);
     });
     myMap.controls.add(geolocationControl);
@@ -163,7 +180,6 @@ function init() {
 function get_user_coords(geolocationControl) {
     return geolocationControl.events.add('locationchange', function (event) {
         let position = event.get('position')
-        console.log(position)
         myMap.panTo(position);
         return position
     });
@@ -195,4 +211,200 @@ function office_radio_handler(objectManager) {
             objectManager.add(data);
         });
     }
+}
+
+
+//физики
+
+let singIndiv = false;
+
+
+const filterBlock = document.querySelector('.filter');
+
+buttonSingInd.onclick = () => {
+	if (havQueue){
+		queueBlock.classList.add('active');
+		return
+	}
+	if (!filterBlock.classList.contains('active')){
+		singIndiv = true;
+		filterBlock.classList.add('active');
+		pointBlock.classList.remove('active');
+		pointArrow.classList.remove('active');
+		pointArrow.classList.add('rotate');
+		infoBlock.classList.remove('active');
+	}
+}
+
+const buttonPoint = document.querySelector('.button--point');
+const crossFilter = document.querySelector('.cross--filter');
+const buttonFilter = document.querySelector('.button--filter');
+
+crossFilter.onclick = () => {
+	filterBlock.classList.remove('active');
+	singIndiv = false;
+}
+
+buttonFilter.onclick = () => { //buttonOtherLegal
+	filterBlock.classList.remove('active');
+	pointBlock.classList.add('active');
+	pointArrow.classList.add('active');
+	pointArrow.classList.remove('rotate');
+	buttonPoint.classList.add('active')
+}
+
+buttonPoint.onclick = () => {
+	if (singIndiv) {
+		filterBlock.classList.add('active');
+		pointBlock.classList.remove('active');
+		pointArrow.classList.remove('active');
+		pointArrow.classList.add('rotate');
+		infoBlock.classList.remove('active');
+	}
+	if (singLegal) {
+		legalBlock.classList.add('active');
+		pointBlock.classList.remove('active');
+		pointArrow.classList.remove('active');
+		pointArrow.classList.add('rotate');
+		infoBlock.classList.remove('active');
+	}
+}
+
+//юрлица
+
+
+let singLegal = false;
+
+const legalBlock = document.querySelector('.legal');
+
+buttonSingLeg.onclick = () =>{
+	if (havQueue){
+		queueBlock.classList.add('active');
+		return
+	}
+	if (!legalBlock.classList.contains('active')){
+		singLegal = true;
+		legalBlock.classList.add('active');
+		pointBlock.classList.remove('active');
+		pointArrow.classList.remove('active');
+		pointArrow.classList.add('rotate');
+		infoBlock.classList.remove('active');
+	}
+}
+
+const crossLegal = document.querySelector('.cross--legal');
+const buttonSingLegal = document.querySelector('.button--legal-sing')
+const buttonOtherLegal = document.querySelector('.button--legal-other')
+
+crossLegal.onclick = () => {
+	legalBlock.classList.remove('active');
+	singIndiv = false;
+}
+
+buttonSingLegal.onclick = () => {
+	legalBlock.classList.remove('active');
+	havQueue = true;
+	queueBlock.classList.add('active');
+}
+
+buttonOtherLegal.onclick = () => {
+	legalBlock.classList.remove('active');
+	pointBlock.classList.add('active');
+	pointArrow.classList.add('active');
+	pointArrow.classList.remove('rotate');
+	buttonPoint.classList.add('active')
+}
+
+//запись физ лиц
+
+const beforeIndivBlock = document.querySelector('.indiv');
+const buttonBeforeIndiv = document.querySelector('.button--individual-before');
+const buttonStandIndiv = document.querySelector('.buttop--individual-stand');
+const arrowIndiv = document.querySelector('.indiv__title-svg');
+const crossIndiv = document.querySelector('.cross--indiv');
+const buttonIndiv = document.querySelector('.button--indiv');
+
+buttonBeforeIndiv.onclick = () => {
+	pointBlock.classList.remove('active');
+	pointArrow.classList.remove('active');
+	pointArrow.classList.add('rotate');
+	infoBlock.classList.remove('active');
+	beforeIndivBlock.classList.add('active');
+}
+
+arrowIndiv.onclick = () => {
+	pointBlock.classList.add('active');
+	pointArrow.classList.add('active');
+	pointArrow.classList.remove('rotate');
+	infoBlock.classList.add('active');
+	beforeIndivBlock.classList.remove('active');
+}
+
+crossIndiv.onclick = () => {
+	beforeIndivBlock.classList.remove('active');
+	singIndiv = false;
+}
+buttonIndiv.onclick = () => {
+	beforeIndivBlock.classList.remove('active');
+	havQueue = true;
+	queueBlock.classList.add('active');
+}
+
+buttonStandIndiv.onclick = () => {
+	pointBlock.classList.remove('active');
+	pointArrow.classList.remove('active');
+	pointArrow.classList.add('rotate');
+	infoBlock.classList.remove('active');
+	havQueue = true;
+	queueBlock.classList.add('active');
+}
+
+
+//запись юрлица
+
+const legalOtherBlock = document.querySelector('.legal-other');
+const buttonLegal = document.querySelector('.button--legal');
+const arrowLegalOther = document.querySelector('.legal-other__title-svg');
+const crossLegalOther = document.querySelector('.cross--legal-other');
+const buttonLegalOther = document.querySelector('.button--legal-other-sing');
+
+buttonLegal.onclick = () => {
+	pointBlock.classList.remove('active');
+	pointArrow.classList.remove('active');
+	pointArrow.classList.add('rotate');
+	infoBlock.classList.remove('active');
+	legalOtherBlock.classList.add('active');
+}
+
+arrowLegalOther.onclick = () => {
+	pointBlock.classList.add('active');
+	pointArrow.classList.add('active');
+	pointArrow.classList.remove('rotate');
+	infoBlock.classList.add('active');
+	legalOtherBlock.classList.remove('active');
+}
+
+crossLegalOther.onclick = () => {
+	legalOtherBlock.classList.remove('active');
+	singIndiv = false;
+}
+
+buttonLegalOther.onclick = () => {
+	legalOtherBlock.classList.remove('active');
+	havQueue = true;
+	queueBlock.classList.add('active');
+}
+
+
+//очередь
+
+const queueBlock = document.querySelector('.queue');
+const crossQueue = document.querySelector('.cross--queue')
+
+buttonQueue.onclick = () => {
+	queueBlock.classList.add('active');
+}
+
+crossQueue.onclick = () => {
+	queueBlock.classList.remove('active');
 }

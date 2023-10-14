@@ -1,25 +1,21 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Определение местоположения пользователя</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" href={% static "style/style.css" %}>
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=84ed901f-a57b-4c02-a213-6bcf3f08a149"
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href={% static '/style/style.css' %}>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=5dbf11d7-59c3-4f1c-9150-50b814b2e4b7"
             type="text/javascript"></script>
     <script src="https://yandex.st/jquery/2.2.3/jquery.min.js" type="text/javascript"></script>
-    <script src="{% static 'js/map.js' %}" type="module"></script>
+    <script src={% static 'js/map.js' %} type="text/javascript" defer></script>
     <title>Document</title>
 </head>
-<!-- <label class="label">
-	<input class="checkbox__real" type="checkbox">
-	<div class="checkbox__custom"></div>
-	<p class="checkbox__text">Кредиты</p>
-</label> -->
 <body class="body">
 <header class="header">
     <div class="header__radio">
-        <img class="header__img" src={% static "/images/VTB-night.svg" %} alt="">
+        <img class="header__img" src={% static 'images/VTB-night.svg' %} alt="">
         <label class="header__label">
             <input class="header__radio-real header__radio-real--atms" type="radio" name="choice">
             <div class="header__radio-custom">Банкоматы</div>
@@ -40,9 +36,12 @@
 <main class="main">
     <div id="map"></div>
     <form class="filter">
-        <h2 class="title">Запись для физических лиц</h2>
+        <div class="title-block">
+            <h2 class="title">Запись для физических лиц</h2>
+            <img class="cross cross--filter" src={% static 'images/map.js' %} alt="">
+        </div>
+        <h2 class="title title--margin-bottom">Выбирете услугу:</h2>
         <div class="filter__office scroll">
-            <h2 class="title">Категории услуг</h2>
             <label class="label">
                 <input class="radio__real" type="radio" name="service-individual">
                 <div class="radio__custom"></div>
@@ -89,7 +88,7 @@
                 <p class="radio__text">Заказ и обслуживание сейфовых ячеек</p>
             </label>
         </div>
-        <h2 class="title">Дополнительные параметры</h2>
+        <h2 class="title title--margin-bottom">Дополнительные параметры</h2>
         <label class="label">
             <input class="checkbox__real" type="checkbox">
             <div class="checkbox__custom"></div>
@@ -107,78 +106,22 @@
         <form class="point__form">
             <input class="input-text input-text--point" type="text" placeholder="Город, район, улица...">
             <button class="point__button">
-                <img class="point__button-svg" src={% static "/images/lupa.svg" %} alt="">
+                <img class="point__button-svg" src="{% static '/images/lupa.svg' %}" alt="">
             </button>
         </form>
         <ul class="point__list scroll">
             <li class="point__item point__item--example">
-                <img class="point__item-work " src={% static "images/work/2.svg" %} alt="">
+                <img class="point__item-work " src={% static '/images/work/2.svg' %} alt="">
                 <p class="point__item-text">г. Москва, Красная площадь, д. 3 г. Москва, Красная площадь, д. 3 г. Москва,
                     Красная площадь, д. 3</p>
                 <p class="point__item-distance">419м</p>
             </li>
-            <li class="point__item">
-                <img class="point__item-work" src={% static "images/work/0.svg" %} alt="">
-                <p class="point__item-text">г. Москва, Красная площадь, д. 3 </p>
-                <p class="point__item-distance">420м</p>
-            </li>
-            <li class="point__item">
-                <img class="point__item-work" src={% static "images/work/1.svg" %} alt="">
-                <p class="point__item-text">г. Москва, Красная площадь, д. 3 </p>
-                <p class="point__item-distance">420м</p>
-            </li>
-            <li class="point__item">
-                <img class="point__item-work" src={% static "images/work/2.svg" %} alt="">
-                <p class="point__item-text">г. Москва, Красная площадь, д. 3 </p>
-                <p class="point__item-distance">420м</p>
-            </li>
-            <li class="point__item">
-                <img class="point__item-work" src={% static "images/work/2.svg" %} alt="">
-                <p class="point__item-text">г. Москва, Красная площадь, д. 3 </p>
-                <p class="point__item-distance">420м</p>
-            </li>
-            <li class="point__item">
-                <img class="point__item-work" src={% static "images/work/2.svg" %} alt="">
-                <p class="point__item-text">г. Москва, Красная площадь, д. 3 </p>
-                <p class="point__item-distance">420м</p>
-            </li>
-            <li class="point__item">
-                <img class="point__item-work" src={% static "images/work/2.svg" %} alt="">
-                <p class="point__item-text">г. Москва, Красная площадь, д. 3 </p>
-                <p class="point__item-distance">420м</p>
-            </li>
-            <li class="point__item">
-                <img class="point__item-work" src={% static "images/work/2.svg" %} alt="">
-                <p class="point__item-text">г. Москва, Красная площадь, д. 3 </p>
-                <p class="point__item-distance">420м</p>
-            </li>
-            <li class="point__item">
-                <img class="point__item-work" src={% static "images/work/2.svg" %} alt="">
-                <p class="point__item-text">г. Москва, Красная площадь, д. 3 </p>
-                <p class="point__item-distance">420м</p>
-            </li>
-            <li class="point__item">
-                <img class="point__item-work" src={% static "images/work/2.svg" %} alt="">
-                <p class="point__item-text">г. Москва, Красная площадь, д. 3 </p>
-                <p class="point__item-distance">420м</p>
-            </li>
-            <li class="point__item">
-                <img class="point__item-work" src={% static "images/work/2.svg" %} alt="">
-                <p class="point__item-text">г. Москва, Красная площадь, д. 3 </p>
-                <p class="point__item-distance">420м</p>
-            </li>
-            <li class="point__item">
-                <img class="point__item-work" src={% static "images/work/2.svg" %} alt="">
-                <p class="point__item-text">г. Москва, Красная площадь, д. 3 </p>
-                <p class="point__item-distance">420м</p>
-            </li>
         </ul>
         <button class="button button--point" type='button'>Изменить фильтры</button>
     </aside>
-
-    <div class="info" id="info">
+    <div class="info">
         <div class="info__title">
-            <svg class="info__title-svg" width="28" height="24" viewBox="0 0 28 24" fill="none"
+            <svg class="arrow info__title-svg" width="28" height="24" viewBox="0 0 28 24" fill="none"
                  xmlns="http://www.w3.org/2000/svg">
                 <path d="M0.93934 10.9393C0.353553 11.5251 0.353553 12.4749 0.93934 13.0607L10.4853 22.6066C11.0711 23.1924 12.0208 23.1924 12.6066 22.6066C13.1924 22.0208 13.1924 21.0711 12.6066 20.4853L4.12132 12L12.6066 3.51472C13.1924 2.92893 13.1924 1.97919 12.6066 1.3934C12.0208 0.807613 11.0711 0.807613 10.4853 1.3934L0.93934 10.9393ZM28 10.5L2 10.5L2 13.5L28 13.5L28 10.5Z"/>
             </svg>
@@ -189,43 +132,43 @@
             <h4 class="point__work-title">Загруженность</h4>
             <ul class="point__work-list">
                 <li class="point__work-item">
-                    <img class="point__work-svg" src={% static "images/work-item/0.svg" %} alt="">
+                    <img class="point__work-svg" src={% static '/images/work-item/0.svg' %} alt="">
                     <p class="point__work-text">9</p>
                 </li>
                 <li class="point__work-item">
-                    <img class="point__work-svg" src={% static "images/work-item/0.svg" %} alt="">
+                    <img class="point__work-svg" src={% static '/images/work-item/0.svg' %} alt="">
                     <p class="point__work-text">10</p>
                 </li>
                 <li class="point__work-item">
-                    <img class="point__work-svg" src={% static "images/work-item/0.svg" %} alt="">
+                    <img class="point__work-svg" src={% static '/images/work-item/0.svg' %} alt="">
                     <p class="point__work-text">11</p>
                 </li>
                 <li class="point__work-item">
-                    <img class="point__work-svg" src={% static "images/work-item/0.svg" %} alt="">
+                    <img class="point__work-svg" src={% static '/images/work-item/0.svg' %} alt="">
                     <p class="point__work-text">12</p>
                 </li>
                 <li class="point__work-item">
-                    <img class="point__work-svg" src={% static "images/work-item/0.svg" %} alt="">
+                    <img class="point__work-svg" src={% static '/images/work-item/1.svg' %} alt="">
                     <p class="point__work-text">13</p>
                 </li>
                 <li class="point__work-item">
-                    <img class="point__work-svg" src={% static "images/work-item/0.svg" %} alt="">
+                    <img class="point__work-svg" src={% static '/images/work-item/2.svg' %} alt="">
                     <p class="point__work-text">14</p>
                 </li>
                 <li class="point__work-item">
-                    <img class="point__work-svg" src={% static "images/work-item/2.svg" %} alt="">
+                    <img class="point__work-svg" src={% static '/images/work-item/2.svg' %} alt="">
                     <p class="point__work-text">15</p>
                 </li>
                 <li class="point__work-item">
-                    <img class="point__work-svg" src={% static "images/work-item/1.svg" %} alt="">
+                    <img class="point__work-svg" src={% static '/images/work-item/2.svg' %} alt="">
                     <p class="point__work-text">16</p>
                 </li>
                 <li class="point__work-item">
-                    <img class="point__work-svg" src={% static "images/work-item/0.svg" %} alt="">
+                    <img class="point__work-svg" src={% static '/images/work-item/2.svg' %} alt="">
                     <p class="point__work-text">17</p>
                 </li>
                 <li class="point__work-item">
-                    <img class="point__work-svg" src={% static "images/work-item/0.svg" %} alt="">
+                    <img class="point__work-svg" src={% static '/images/work-item/2.svg' %} alt="">
                     <p class="point__work-text">18</p>
                 </li>
             </ul>
@@ -323,41 +266,340 @@
                 <p class="info__item-text">Да</p>
             </li>
         </ul>
-        <!-- <form class="info__form info__form--legal">
-            <h2 class="title">Хотите встать в очередь?</h2>
-            <label class="label">
-                <input class="radio__real radio__real--queue-fast" type="radio" name="queue" >
-                <div class="radio__custom"></div>
-                <p class="radio__text">Как можно скорее</p>
-            </label>
-            <label class="label label--queue-time">
-                <input class="radio__real radio__real--queue-time" type="radio" name="queue" >
-                <div class="radio__custom"></div>
-                <p class="radio__text">Ко времени</p>
-            </label>
-            <input class="input__time input-time-queue" type="time" >
-            <a class="button" href="#">Записаться в очередь</a>
-        </form> -->
-        <!-- <form class="info__form info__form--individual">
-            <h2 class="title">Хотите встать в очередь?</h2>
-            <label class="label">
-                <input class="radio__real radio__real--queue-fast" type="radio" name="queue" >
-                <div class="radio__custom"></div>
-                <p class="radio__text">Как можно скорее</p>
-            </label>
-            <label class="label label--queue-time">
-                <input class="radio__real radio__real--queue-time" type="radio" name="queue" >
-                <div class="radio__custom"></div>
-                <p class="radio__text">Ко времени</p>
-            </label>
-            <input class="input__time input-time-queue" type="time" >
-            <a class="button" href="#">Записаться в очередь</a>
-        </form> -->
+        <form class="info__form info__form--individual">
+            <h2 class="title title--margin-bottom">Хотите встать в очередь?</h2>
+            <button class="button button--individual-before" type="button">Предзапись</button>
+            <button class="button buttop--individual-stand" type="button">Встать в очередь</button>
+        </form>
+        <form class="info__form info__form--legal">
+            <button class="button button--legal" type="button">Менеджеры этого отделения</button>
+        </form>
     </div>
+    <form class="legal">
+        <div class="title-block">
+            <h2 class="title">Запись для юридических лиц</h2>
+            <img class="cross cross--legal" src={% static '/images/cross.svg' %} alt="">
+        </div>
+        <p class="text">Ваш персональный менеджер: Иванова Мария Васильевна</p>
+        <p class="text">Адрес отделения: 141506, Московская область, г. Солнечногорск, ул. Красная, д. 60</p>
+        <h2 class="text">Выберите услугу:</h2>
+        <div class="legal__office scroll">
+            <label class="label">
+                <input class="radio__real" type="radio" name="service-legal">
+                <div class="radio__custom"></div>
+                <p class="radio__text">Получение консультации</p>
+            </label>
+            <label class="label">
+                <input class="radio__real" type="radio" name="service-legal">
+                <div class="radio__custom"></div>
+                <p class="radio__text">Управление корпоративными счетами и финансами</p>
+            </label>
+            <label class="label">
+                <input class="radio__real" type="radio" name="service-legal">
+                <div class="radio__custom"></div>
+                <p class="radio__text">Кредитование и финансирование</p>
+            </label>
+            <label class="label">
+                <input class="radio__real" type="radio" name="service-legal">
+                <div class="radio__custom"></div>
+                <p class="radio__text">Сервисы по обслуживанию клиентов и эквайринг</p>
+            </label>
+            <label class="label">
+                <input class="radio__real" type="radio" name="service-legal">
+                <div class="radio__custom"></div>
+                <p class="radio__text">Страхование и защита активов</p>
+            </label>
+            <label class="label">
+                <input class="radio__real" type="radio" name="service-legal">
+                <div class="radio__custom"></div>
+                <p class="radio__text">Заказ и обслуживание сейфовых ячеек</p>
+            </label>
+            <label class="label">
+                <input class="radio__real" type="radio" name="service-legal">
+                <div class="radio__custom"></div>
+                <p class="radio__text">Международное обслуживание и валютные операции</p>
+            </label>
+            <label class="label">
+                <input class="radio__real" type="radio" name="service-legal">
+                <div class="radio__custom"></div>
+                <p class="radio__text">Юридические услуги</p>
+            </label>
+        </div>
+        <p class="text">Октябрь</p>
+        <ul class="legal__days">
+            <label class="legal__days-item">
+                <input class="legal__days-real-radio" type="radio" name="legal-days">
+                <div class="legal__days-custom-radio">13</div>
+            </label>
+            <label class="legal__days-item">
+                <input class="legal__days-real-radio" type="radio" name="legal-days">
+                <div class="legal__days-custom-radio">14</div>
+            </label>
+            <label class="legal__days-item">
+                <input class="legal__days-real-radio" type="radio" name="legal-days">
+                <div class="legal__days-custom-radio">15</div>
+            </label>
+            <label class="legal__days-item">
+                <input class="legal__days-real-radio" type="radio" name="legal-days">
+                <div class="legal__days-custom-radio">16</div>
+            </label>
+            <label class="legal__days-item">
+                <input class="legal__days-real-radio" type="radio" name="legal-days">
+                <div class="legal__days-custom-radio">17</div>
+            </label>
+            <label class="legal__days-item">
+                <input class="legal__days-real-radio" type="radio" name="legal-days">
+                <div class="legal__days-custom-radio">18</div>
+            </label>
+            <label class="legal__days-item">
+                <input class="legal__days-real-radio" type="radio" name="legal-days">
+                <div class="legal__days-custom-radio">19</div>
+            </label>
+        </ul>
+        <ul class="list-time">
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="legal-time">
+                <div class="list-time__custom-radio">10:00</div>
+            </label>
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="legal-time">
+                <div class="list-time__custom-radio">10:30</div>
+            </label>
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="legal-time">
+                <div class="list-time__custom-radio">11:00</div>
+            </label>
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="legal-time">
+                <div class="list-time__custom-radio">11:30</div>
+            </label>
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="legal-time">
+                <div class="list-time__custom-radio">12:00</div>
+            </label>
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="legal-time">
+                <div class="list-time__custom-radio">12:30</div>
+            </label>
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="legal-time">
+                <div class="list-time__custom-radio">13:00</div>
+            </label>
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="legal-time">
+                <div class="list-time__custom-radio">13:30</div>
+            </label>
+        </ul>
+        <p class="text">Итого: "Услуга 1" на 18 октября 10:30</p>
+        <div class="legal__buttons">
+            <button class="button button--fix button--legal-sing" type="button">Записаться</button>
+            <div class="legal__buttons-box">
+                <p>Нужно сегодня? Запишитесь к другому менеджеру</p>
+                <div class="button button--fix button--legal-other">Другой менеджер</div>
+            </div>
+        </div>
+    </form>
+    <form class="indiv">
+        <div class="title-block">
+            <svg class="arrow indiv__title-svg" width="28" height="24" viewBox="0 0 28 24" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.93934 10.9393C0.353553 11.5251 0.353553 12.4749 0.93934 13.0607L10.4853 22.6066C11.0711 23.1924 12.0208 23.1924 12.6066 22.6066C13.1924 22.0208 13.1924 21.0711 12.6066 20.4853L4.12132 12L12.6066 3.51472C13.1924 2.92893 13.1924 1.97919 12.6066 1.3934C12.0208 0.807613 11.0711 0.807613 10.4853 1.3934L0.93934 10.9393ZM28 10.5L2 10.5L2 13.5L28 13.5L28 10.5Z"/>
+            </svg>
+            <h2 class="title">Предзапись для физических лиц</h2>
+            <img class="cross cross--indiv" src={% static '/images/cross.svg' %} alt="">
+        </div>
+        <p class="text">Услуга: Услуга 1</p>
+        <ul class="list-time">
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="indiv-time">
+                <div class="list-time__custom-radio">10:00</div>
+            </label>
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="indiv-time">
+                <div class="list-time__custom-radio">10:30</div>
+            </label>
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="indiv-time">
+                <div class="list-time__custom-radio">11:00</div>
+            </label>
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="indiv-time">
+                <div class="list-time__custom-radio">11:30</div>
+            </label>
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="indiv-time">
+                <div class="list-time__custom-radio">12:00</div>
+            </label>
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="indiv-time">
+                <div class="list-time__custom-radio">12:30</div>
+            </label>
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="indiv-time">
+                <div class="list-time__custom-radio">13:00</div>
+            </label>
+            <label class="list-time__item">
+                <input class="list-time__real-radio" type="radio" name="indiv-time">
+                <div class="list-time__custom-radio">13:30</div>
+            </label>
+        </ul>
+        <button class="button button--indiv" type="button">Записаться</button>
+    </form>
+    <form class="legal-other ">
+        <div class="title-block">
+            <svg class="arrow legal-other__title-svg" width="28" height="24" viewBox="0 0 28 24" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.93934 10.9393C0.353553 11.5251 0.353553 12.4749 0.93934 13.0607L10.4853 22.6066C11.0711 23.1924 12.0208 23.1924 12.6066 22.6066C13.1924 22.0208 13.1924 21.0711 12.6066 20.4853L4.12132 12L12.6066 3.51472C13.1924 2.92893 13.1924 1.97919 12.6066 1.3934C12.0208 0.807613 11.0711 0.807613 10.4853 1.3934L0.93934 10.9393ZM28 10.5L2 10.5L2 13.5L28 13.5L28 10.5Z"/>
+            </svg>
+            <h2 class="title">Запись для юридических лиц к другому менеджеру</h2>
+            <img class="cross cross--legal-other" src={% static '/images/cross.svg' %} alt="">
+        </div>
+        <p class="text">Адрес отделения: г. Москва, Красная площадь, д. 3</p>
+        <ul class="legal-other__list scroll">
+            <li class="legal-other__item">
+                <p class="text">Иванова Карина Вячеславована</p>
+                <ul class="list-time">
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">10:00</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">10:30</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">11:00</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">11:30</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">12:00</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">12:30</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">13:00</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">13:30</div>
+                    </label>
+                </ul>
+            </li>
+            <li class="legal-other__item">
+                <p class="text">Петросянова Анжела Игнатьевна</p>
+                <ul class="list-time">
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">10:00</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">10:30</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">11:00</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">11:30</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">12:00</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">12:30</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">13:00</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">13:30</div>
+                    </label>
+                </ul>
+            </li>
+            <li class="legal-other__item">
+                <p class="text">Исаева Аделина Дмитриевна</p>
+                <ul class="list-time">
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">10:00</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">10:30</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">11:00</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">11:30</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">12:00</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">12:30</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">13:00</div>
+                    </label>
+                    <label class="list-time__item">
+                        <input class="list-time__real-radio" type="radio" name="legal-other-time">
+                        <div class="list-time__custom-radio">13:30</div>
+                    </label>
+                </ul>
+            </li>
+        </ul>
+        <p class="text">Итого: “Услуга 2” на 18 ноября в 15:00 у менеджера Петросян Анжела Игнатьевна</p>
+        <button class="button button--legal-other-sing" type="button">Записаться</button>
+    </form>
+    <aside class="queue">
+        <div class="title-block">
+            <h2 class="title">Очередь</h2>
+            <img class="cross cross--queue" src={% static '/images/cross.svg' %} alt="">
+        </div>
+        <!-- <div class="queue__none">
+            <p class="text">У вас нет очередей!</p>
+        </div> -->
+        <div class="queue__have">
+            <p class="text">Подойдите в отделение банка 15 октября 3 к 15:30</p>
+            <p class="text">Адрес: 141506, Московская область, г. Солнечногорск, ул. Красная, д. 60</p>
+            <p class="text">Услуга: Услуга 1</p>
+            <button class="button" type="button">Построить маршрут</button>
+            <div class="queue__have-indiv">
+                <p class="text">Подтвердите свою очередь в отделении.</p>
+                <p class="text">Для этого отсканируйте QR-код в терминале банка.</p>
+                <img class="queue__photo" src={% static '/images/photo.svg' %} alt="">
+            </div>
+            <!-- <div class="queue__have-legal">
+                <button class="button" type="button">Напомнить</button>
+            </div> -->
+        </div>
+        <!-- <div class="queue__done">
+            <p class="text">Ваш талон № А081</p>
+            <p class="text">Скоро вас вызовут!</p>
+        </div> -->
+    </aside>
 </main>
 <footer class="footer">
-
 </footer>
-<!-- <script src="/js/script.js"></script> -->
 </body>
 </html>

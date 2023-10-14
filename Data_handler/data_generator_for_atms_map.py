@@ -1,5 +1,6 @@
 import json
 
+
 # Функция для конвертации в новый формат
 
 def convert_to_new_format(input_json):
@@ -7,6 +8,9 @@ def convert_to_new_format(input_json):
     id_counter = 1
     for data in input_json['atms']:
         coordinates = [data["latitude"], data["longitude"]]
+        address = data["address"]
+        if address == '' or not address:
+            continue
         services = []
         if data["latitude"] == 55.748914:
             print('')
@@ -14,15 +18,16 @@ def convert_to_new_format(input_json):
             if values["serviceActivity"] == "AVAILABLE":
                 services.append(param)
 
-
         feature = {
             "type": "Feature",
             "id": id_counter,
+            "address": address,
             "geometry": {
                 "type": "Point",
                 "coordinates": coordinates
             },
             "services": services
+
         }
         features.append(feature)
         id_counter += 1
@@ -33,6 +38,7 @@ def convert_to_new_format(input_json):
     }
     return feature_collection
 
+
 # Считываем входные данные из файла
 with open("atms.json", "r", encoding='utf-8') as input_file:
     input_data = json.load(input_file)
@@ -41,5 +47,5 @@ with open("atms.json", "r", encoding='utf-8') as input_file:
 new_format_json = convert_to_new_format(input_data)
 
 # Записываем результат в файл
-with open("atms_data.json", "w") as output_file:
-    json.dump(new_format_json, output_file, indent=4)
+with open("atms_data.json", "w", encoding='utf-8') as output_file:
+    json.dump(new_format_json, output_file, ensure_ascii=False, indent=4)
