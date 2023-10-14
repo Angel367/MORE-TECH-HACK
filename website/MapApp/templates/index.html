@@ -3,8 +3,9 @@
 <html>
 <head>
     <title>Определение местоположения пользователя</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=84ed901f-a57b-4c02-a213-6bcf3f08a149" type="text/javascript"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=84ed901f-a57b-4c02-a213-6bcf3f08a149"
+            type="text/javascript"></script>
     <script src="https://yandex.st/jquery/2.2.3/jquery.min.js" type="text/javascript"></script>
     <script src="{% static 'js/map.js' %}" type="module"></script>
     <style>
@@ -39,19 +40,19 @@
     </style>
 </head>
 <body>
-    <div id="map-container">
-        <div id="map"></div>
-            <div id="info-container">
-                <h2>Фильтр</h2>
-                <label>
-                    <input type="radio" name="filter" value="atms" id="atm_selector"> Банкоматы
-                </label>
-                <br>
-                <label>
-                    <input type="radio" name="filter" value="branches" id="office_selector"> Отделения
-                </label>
-            </div>
-
+<div id="map-container">
+    <div id="map"></div>
+    <div id="info-container">
+        <h2>Фильтр</h2>
+        <label>
+            <input type="radio" name="filter" value="atms" id="atm_selector"> Банкоматы
+        </label>
+        <br>
+        <label>
+            <input type="radio" name="filter" value="branches" id="office_selector"> Отделения
+        </label>
+        <h2><br><p id="info"></p></h2>
     </div>
+</div>
 </body>
 </html>

@@ -22,9 +22,10 @@ function init() {
     objectManager.objects.options.set("iconImageSize", [48, 48])
     objectManager.objects.options.set("iconImageOffset", [-24, -24])
     objectManager.objects.options.set("iconContentOffset", [15, 15])
-    objectManager.objects.events.add('click', function () {
-        //alert("w")
-        // какой-нибудь адский div выплывает с информацией, div можно генерировать по шаблону
+    objectManager.objects.events.add('click', function (event) {
+        let obj = objectManager.objects.getById(event.get('objectId'))
+        console.log(obj)
+        document.getElementById("info").innerText = obj.services
     })
     // либо
     // objectManager.events.add('click', function () {
