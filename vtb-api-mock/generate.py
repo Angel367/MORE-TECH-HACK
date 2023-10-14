@@ -55,9 +55,9 @@ def create_data():
                 random.choice(SERVICE_CHOICES)[0],
                 client_id=client.id,
                 office_id=random.choice(list(Office.query.all())).id,
-                opened=datetime.datetime(2023, 10, 1, 1, random.randint(20, 40)),
-                closed=datetime.datetime(2023, 10, 1, 1, random.randint(40, 59)))
-            o = Coupon(created=datetime.datetime(2023, 10, 1, 1, random.randint(0, 20)))
+                opened=datetime.datetime(2023, 10, random.randint(9, 15), random.randint(9, 18), random.randint(20, 40)),
+                closed=datetime.datetime(2023, 10, random.randint(9, 15), random.randint(9, 18), random.randint(40, 59)))
+            o = Coupon(created=datetime.datetime(2023, 10, random.randint(9, 15), random.randint(9, 18),  random.randint(0, 20)))
             if random.choice([True, True, False]):
                 o.operation_id = op.id
             else:

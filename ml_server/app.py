@@ -3,10 +3,10 @@ import csv
 
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
-from flask import Flask, jsonify, request, Response
+from flask import Flask, jsonify, request
 
 from ml_server.models import *
-from ml_server.panda import *
+
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -26,6 +26,7 @@ SERVICE_CHOICES = [
 
 def calculate():
     get_data_from_api()
+
     # for office in Office.get_offices_suo():
     #
     # results = []
@@ -41,6 +42,7 @@ def get_data_from_api():
         office = Office(office["address"], office["is_atms"], office["has_suo"])
     operations = requests.get("http://127.0.0.1:5000/operations").json()
     coupons = requests.get("http://127.0.0.1:5000/coupons").json()
+    operation_ = None
     for operation in operations:
         for coupon in coupons:
             if coupon["operation_id"] == operation["id"]:
@@ -49,23 +51,30 @@ def get_data_from_api():
             else:
                 start = operation["opened"]
                 finish = operation["closed"]
-                Operation(service_type=operation["service_type"],
-                          start=start,
-                          finish=finish,
-                          office=office.get_by_id(operation["office_id"])
-                          )
+                operation_ = Operation(service_type=operation["service_type"],
+                                       start=start,
+                                       finish=finish,
+                                       office=office.get_by_id(operation["office_id"])
+                                       )
+    print(len(operation_.sort_list()))
 
 
 @app.route('/index', methods=['POST'])
 def get_ml_data():
-    # request.headers['Content-Type'] = "application/json"
-    # data = request.get_json()
-    data = []
-    with open("dir/SERVICES_prediction_week.csv", encoding="utf-8") as f:
+    data = request.get_json()
+    with open("/file.csv", encoding="utf-8") as f:
         f_reader = csv.reader(f, delimiter=",")
         list_ = []
+        is_first = True
         for row in f_reader:
-            office = office.get_by_id(row[1])
+            if is_first:
+                is_first = False
+                continue
+            office = Office("none")
+
+            office_1 = office.get_by_id(row[1])
+            office.list_offices.remove(office)
+            office = office_1
             if 'office_id' in data and office.id != data['office_id']:
                 continue
             if 'is_atms' in data and (data['is_atms'] == True
@@ -85,15 +94,16 @@ def get_ml_data():
                                   day_of_week=row[4],
                                   hour=row[3],
                                   duration_waiting_in_minutes=row[5])
-        print(list_.list_ser_offices.__dict__)
-        return jsonify(list_.list_ser_offices.__dict__), 200, {'Content-Type': 'application/json'}
+        json_dict = [one.__dict__ for one in list_.list_ser_offices]
+        list_.list_ser_offices
+        return jsonify(json_dict), 200, {'Content-Type': 'application/json'}
 
 
 if __name__ == '__main__':
     # Shut down the scheduler when exiting the app
     calculate()
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=calculate, trigger="interval", minutes=1)
+    scheduler.add_job(func=calculate, trigger="interval", weeks=1)
     scheduler.start()
     atexit.register(lambda: scheduler.shutdown())
     app.run(debug=True, use_reloader=False, host='127.0.0.1', port=5001)

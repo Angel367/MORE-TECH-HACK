@@ -92,7 +92,7 @@ def get_coupon(id_coupon):
 def create_coupon():
     data = request.get_json()
     if 'office_id' not in data or 'service_type' not in data or 'client_id' not in data:
-        return jsonify({'message': 'Тип операции, номер талона, id отделения обязательны для заполнения'}), 400
+        return jsonify({"message": "Тип операции, номер талона, id отделения обязательны для заполнения"}), 400
     Office.query.get_or_404(data['office_id'], 'Неверно введен номер отделения')
     operation = Operation(office_id=data['office_id'], service_type=data['service_type'], client_id=data['client_id'])
     db.session.add(operation)

@@ -1,8 +1,6 @@
-import datetime
-from operator import attrgetter, itemgetter
+from operator import itemgetter
 
 from dateutil.parser import parse
-from dateutil.tz import tzoffset
 
 CLIENT_TYPE = [
     (0, "Ю"),  # Юр.лиц
@@ -37,7 +35,7 @@ class Office:
     def get_offices_atms(self):
         return [o for o in self.list_offices if o.is_atms]
 
-    def __init__(self, addr, is_atm, has_suo):
+    def __init__(self, addr="", is_atm=True, has_suo=False):
         self.id = len(self.list_offices)
         self.address = addr
         self.has_suo = has_suo
@@ -47,8 +45,6 @@ class Office:
 
     def clean(self):
         self.list_offices = []
-
-
 
 
 class Operation:
@@ -67,21 +63,21 @@ class Operation:
         self.finish = finish
         self.list_operations.append(self)
         self.id = len(self.list_operations)
-
-        dt1 = parse(self.start)
-        dt2 = parse(self.finish)
-        print(dt2, dt1)
-
+        # print(self.sort_list())
+        # print()
 
     def clean(self):
         self.list_operations = []
 
     def to_tuple(self):
+        dt1 = parse(self.start).minute + parse(self.start).hour * 60
+        dt2 = parse(self.finish).minute + parse(self.finish).hour * 60
+
         return (self.office.id,
                 self.service_type,
-                self.start.hour(),
-                datetime.datetime.weekday(self.start.date),
-                datetime.timedelta(self.finish - self.start)
+                parse(self.start).hour,
+                parse(self.start).weekday(),
+                dt2 - dt1
                 )
 
     def sort_list(self):
