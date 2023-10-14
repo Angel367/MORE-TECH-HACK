@@ -1,15 +1,30 @@
 import json
 
-with open('atms.json', 'r', encoding='utf-8') as input_file:
+with open('offices.json', 'r', encoding='utf-8') as input_file:
     source_json = json.load(input_file)
 
 # Преобразование в нужный формат
 features = []
 id_counter = 1
 
+days_map
+
 for item in source_json:
     coordinates = [item["latitude"], item["longitude"]]
     services = [key for key, value in item.items() if value == "Y"]
+    open_hours_individual = []
+    for hour in item['openHoursIndividual']:
+        if hour['days'] == 'пн-чт':
+            res = [
+                {
+                    'days': 0,
+                    'hours':
+                }
+            ]
+        open_hours_individual.append(
+            hour
+        )
+    print(open_hours_individual)
 
     feature = {
         "type": "Feature",
@@ -18,7 +33,10 @@ for item in source_json:
             "type": "Point",
             "coordinates": coordinates
         },
-        "services": services
+        "services": services,
+        "open_hours_individual":
+            open_hours_individual
+
     }
 
     features.append(feature)
