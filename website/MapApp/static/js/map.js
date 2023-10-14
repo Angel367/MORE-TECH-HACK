@@ -14,7 +14,7 @@ function start() {
 start();
 
 buttonEnter.onclick = () => {
-	userStatus = "F";
+	userStatus = "L";
 	buttonEnter.classList.remove('active');
 	buttonQueue.classList.add('active')
 	buttonExit.classList.add('active');
@@ -40,6 +40,7 @@ buttonExit.onclick = () => {
 
 	document.querySelector('.info__form--legal').classList.remove('active');
 	document.querySelector('.info__form--individual').classList.remove('active');
+	buttonPoint.remove();
 
 }
 
@@ -59,7 +60,7 @@ pointArrow.onclick = () => {
 }
 
 const infoBlock = document.querySelector('.info');
-const infoArrow = document.querySelector('.info__title-svg')
+
 
 let pointsList;
 
@@ -69,23 +70,21 @@ let pointsList;
 
 
 
-document.querySelector('.point__item').onclick = () => {
-	if (!infoBlock.classList.contains('active')){
-		infoBlock.classList.add('active');
-		document.querySelector('.info__form--legal').classList.remove('active');
-		document.querySelector('.info__form--individual').classList.remove('active');
-		if (singIndiv) {
-			document.querySelector('.info__form--individual').classList.add('active');
-		}
-		if (singLegal) {
-			document.querySelector('.info__form--legal').classList.add('active');
-		}
-	}
-}
+// document.querySelector('.point__item').onclick = () => {
+// 	if (!infoBlock.classList.contains('active')){
+// 		infoBlock.classList.add('active');
+// 		document.querySelector('.info__form--legal').classList.remove('active');
+// 		document.querySelector('.info__form--individual').classList.remove('active');
+// 		if (singIndiv) {
+// 			document.querySelector('.info__form--individual').classList.add('active');
+// 		}
+// 		if (singLegal) {
+// 			document.querySelector('.info__form--legal').classList.add('active');
+// 		}
+// 	}
+// }
 
-infoArrow.onclick = () => {
-    infoBlock.classList.remove('active');
-}
+
 
 function update_info_block_parameters(params) {
     document.querySelector('.info__name').textContent = params.name
@@ -110,16 +109,193 @@ function update_point__list(map, objects, userCoords) {
         let image_num = 2
         point_list.insertAdjacentHTML("beforeend", `<li class="point__item" data-id=`+object['object'].id+`><img class="point__item-work" src="static/images/work/`+image_num+`.svg" alt=""><p class="point__item-text">` + object['object'].address + `</p><p class="point__item-distance">`+object['distance_from_user']+`м</p></li>`)
     }
+
 	pointsList = document.querySelectorAll('.point__item');
 	pointsList.forEach(a => a.onclick = (e => {
 		let td = e.target.closest('.point__item');
 		if (!td) return;
-		if (!infoBlock.classList.contains('active')) {
-			infoBlock.classList.add('active');
-			create_info_div(td.dataset.id, objects_to_point__list)
-		}
+		createInfo(td.dataset.id, objects_to_point__list)
+		// infoBlock.classList.add('active');
+		// create_info_div(td.dataset.id, objects_to_point__list);
+		// let infoArrow = document.querySelector('.info__title-svg');
+		// infoArrow.onclick = () => {
+		// 	infoBlock.classList.remove('active');
+		// }
+		// infoBlock.classList.add('active');
+		// document.querySelector('.info__form--legal').classList.remove('active');
+		// document.querySelector('.info__form--individual').classList.remove('active');
+		// if (singIndiv) {
+		// 	document.querySelector('.info__form--individual').classList.add('active');
+		// 	entryQueueIndiv();
+		// }
+		// if (singLegal) {
+		// 	document.querySelector('.info__form--legal').classList.add('active');
+		// 	entryQueueLegal();
+		// }
 	}));
 }
+
+
+function createInfo (id, array) {
+	infoBlock.classList.add('active');
+	create_info_div(id, array);
+	let infoArrow = document.querySelector('.info__title-svg');
+	infoArrow.onclick = () => {
+		infoBlock.classList.remove('active');
+	}
+	infoBlock.classList.add('active');
+	document.querySelector('.info__form--legal').classList.remove('active');
+	document.querySelector('.info__form--individual').classList.remove('active');
+	if (singIndiv) {
+		document.querySelector('.info__form--individual').classList.add('active');
+		entryQueueIndiv();
+	}
+	if (singLegal) {
+		document.querySelector('.info__form--legal').classList.add('active');
+		entryQueueLegal();
+	}
+}
+
+function createContentInfo(object) {
+	let contentTitel = `
+		<div class="info__title">
+			<svg class="arrow info__title-svg" width="28" height="24" viewBox="0 0 28 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M0.93934 10.9393C0.353553 11.5251 0.353553 12.4749 0.93934 13.0607L10.4853 22.6066C11.0711 23.1924 12.0208 23.1924 12.6066 22.6066C13.1924 22.0208 13.1924 21.0711 12.6066 20.4853L4.12132 12L12.6066 3.51472C13.1924 2.92893 13.1924 1.97919 12.6066 1.3934C12.0208 0.807613 11.0711 0.807613 10.4853 1.3934L0.93934 10.9393ZM28 10.5L2 10.5L2 13.5L28 13.5L28 10.5Z"/>
+			</svg>
+			<h3 class="info__name">`+object['object'].name+`</h3>
+		</div>
+		<button class="button button--distance" type="button">Проложить маршрут</button>`;
+	let contentTable1 = ``;
+	let contentTable2 = ``;
+	let contentInfoSecond = ``;
+	let contentForm = ``;
+
+	if (!object['object'].isATM) {
+		contentTable1 = `<li class="info__item info__item--big">
+			<p class="info__item-title info__item-title--table">Юридические лица:</p>
+			<ul class="info__table">`;
+		for (let item of object['object'].open_hours){
+			contentTable1 += `
+			<li class="info__table-row">
+				<p class="info__table-title">`+item['days']+`</p>
+				<p class="info__table-text">`+item['hours']+`</p>
+			</li>
+		`
+		}
+		contentTable1 += `</ul></li>`;
+		contentTable2 = `<li class="info__item info__item--big">
+			<p class="info__item-title info__item-title--table">Физические лица:</p>
+			<ul class="info__table">`;
+		for (let item of object['object'].open_hours_individual){
+			contentTable2 += `
+				<li class="info__table-row">
+					<p class="info__table-title">`+item['days']+`</p>
+					<p class="info__table-text">`+item['hours']+`</p>
+				</li>`;
+		}
+		contentTable2 += `</ul></li>`;
+
+
+		contentInfoSecond = `
+		<li class="info__item">
+			<p class="info__item-title">РКО:</p>
+			<p class="info__item-text">`+ (object['object'].isRKO ? "Да" : "Нет") +`</p>
+		</li>
+		<li class="info__item">
+			<p class="info__item-title">Тип офиса:</p>
+			<p class="info__item-text">`+ (object['object'].office_type)+ `</p>
+		</li>		
+		<li class="info__item">
+			<p class="info__item-title">Наличие пандуса:</p>
+			<p class="info__item-text">`+ (object['object'].services.includes("hasRamp") ? "Да" : "Нет") +`</p>
+		</li></ul>`;
+		contentForm = `
+		<form class="info__form info__form--individual">
+			<h2 class="title title--margin-bottom">Хотите встать в очередь?</h2>
+			<button class="button button--individual-before" type="button">Предзапись</button>
+			<button class="button buttop--individual-stand" type="button">Встать в очередь</button>
+		</form>
+		<form class="info__form info__form--legal">
+			<button class="button button--legal" type="button">Менеджеры этого отделения</button>
+		</form>`;
+	} else {
+		contentTable2 = `<li class="info__item info__item--big">
+			<p class="info__item-title info__item-title--table">Услуги:</p>
+			<ul class="info__table">`;
+		for (let item of object['object'].services){
+			contentTable2 += `
+				<li class="info__table-row">
+					<p class="info__table-text">`+item+`</p>
+				</li>`;
+		}
+		contentTable2 += `</ul></li>`;
+	}
+
+	let image_num = 0;
+	let contentWork = `
+	<div class="point__work">
+		<h4 class="point__work-title">Загруженность</h4>
+		<ul class="point__work-list">
+			<li class="point__work-item">
+				<img class="point__work-svg" src="static/images/work-item/`+image_num+`.svg" alt="">
+				<p class="point__work-text">9</p>
+			</li>
+			<li class="point__work-item">
+				<img class="point__work-svg" src="static/images/work-item/`+2+`.svg" alt="">
+				<p class="point__work-text">10</p>
+			</li>
+			<li class="point__work-item">
+				<img class="point__work-svg" src="static/images/work-item/`+image_num+`.svg" alt="">
+				<p class="point__work-text">11</p>
+			</li>
+			<li class="point__work-item">
+				<img class="point__work-svg" src="static/images/work-item/`+image_num+`.svg" alt="">
+				<p class="point__work-text">12</p>
+			</li>
+			<li class="point__work-item">
+				<img class="point__work-svg" src="static/images/work-item/`+image_num+`.svg" alt="">
+				<p class="point__work-text">13</p>
+			</li>
+			<li class="point__work-item">
+				<img class="point__work-svg" src="static/images/work-item/`+image_num+`.svg" alt="">
+				<p class="point__work-text">14</p>
+			</li>
+			<li class="point__work-item">
+				<img class="point__work-svg" src="static/images/work-item/`+image_num+`.svg" alt="">
+				<p class="point__work-text">15</p>
+			</li>
+			<li class="point__work-item">
+				<img class="point__work-svg" src="static/images/work-item/`+image_num+`.svg" alt="">
+				<p class="point__work-text">16</p>
+			</li>
+			<li class="point__work-item">
+				<img class="point__work-svg" src="static/images/work-item/`+image_num+`.svg" alt="">
+				<p class="point__work-text">17</p>
+			</li>
+			<li class="point__work-item">
+				<img class="point__work-svg" src="static/images/work-item/`+image_num+`.svg" alt="">
+				<p class="point__work-text">18</p>
+			</li>
+		</ul>
+	</div>
+	`;
+
+	let contentInfoFirst = `
+		<li class="info__item">
+			<p class="info__item-title">Адрес:</p>
+			<p class="info__item-text">`+object['object'].address+`</p>
+		</li>`;
+
+
+
+	let contenInfo = `<ul class="info__list scroll">`;
+	contenInfo += contentInfoFirst + contentTable1 + contentTable2 + contentInfoSecond;
+
+	console.log(contenInfo)
+	let contentAll = contentTitel + contentWork + contenInfo + contentForm;
+	return contentAll;
+}
+
 
 function create_info_div(id, array) {
 	/*
@@ -130,157 +306,15 @@ function create_info_div(id, array) {
 	* */
 	let block = document.querySelector('.info');
 	block.innerHTML = ''
-
 	let object;
 	for (let item of array){
-		console.log(item['object'].id, id);
 		if (item['object'].id == id) {
 			object = item;
 			break;
 		}
 	}
-	console.log(array);
-	console.log(object);
+	block.innerHTML = createContentInfo(object);
 
-	let contentTitel = `
-		<div class="info__title">
-			<svg class="arrow info__title-svg" width="28" height="24" viewBox="0 0 28 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path d="M0.93934 10.9393C0.353553 11.5251 0.353553 12.4749 0.93934 13.0607L10.4853 22.6066C11.0711 23.1924 12.0208 23.1924 12.6066 22.6066C13.1924 22.0208 13.1924 21.0711 12.6066 20.4853L4.12132 12L12.6066 3.51472C13.1924 2.92893 13.1924 1.97919 12.6066 1.3934C12.0208 0.807613 11.0711 0.807613 10.4853 1.3934L0.93934 10.9393ZM28 10.5L2 10.5L2 13.5L28 13.5L28 10.5Z"/>
-			</svg>
-			<h3 class="info__name">`+object['object'].name+`</h3>
-		</div>
-		<button class="button button--distance" type="button">Проложить маршрут</button>
-	`;
-	let contentWork = `
-	<div class="point__work">
-		<h4 class="point__work-title">Загруженность</h4>
-		<ul class="point__work-list">
-			<li class="point__work-item">
-				<img class="point__work-svg" src={% static '/images/work-item/0.svg' %} alt="">
-				<p class="point__work-text">9</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src={% static '/images/work-item/0.svg' %} alt="">
-				<p class="point__work-text">10</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src={% static '/images/work-item/0.svg' %} alt="">
-				<p class="point__work-text">11</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src={% static '/images/work-item/0.svg' %} alt="">
-				<p class="point__work-text">12</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src={% static '/images/work-item/1.svg' %} alt="">
-				<p class="point__work-text">13</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src={% static '/images/work-item/2.svg' %} alt="">
-				<p class="point__work-text">14</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src={% static '/images/work-item/2.svg' %} alt="">
-				<p class="point__work-text">15</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src={% static '/images/work-item/2.svg' %} alt="">
-				<p class="point__work-text">16</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src={% static '/images/work-item/2.svg' %} alt="">
-				<p class="point__work-text">17</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src={% static '/images/work-item/2.svg' %} alt="">
-				<p class="point__work-text">18</p>
-			</li>
-		</ul>
-	</div>
-	`;
-
-	contentInfoFirst = `
-		<li class="info__item">
-			<p class="info__item-title">Адрес:</p>
-			<p class="info__item-text">`+object['object'].address+`</p>
-		</li>
-		
-	`;
-	// <li className="info__item">
-	// 	<p className="info__item-title">Метро:</p>
-	// 	<p className="info__item-text">МЦД-1 Белорусско-Савёловский диаметр, станция Лобня</p>
-	// </li>
-
-	contentTable1 = `<li class="info__item info__item--big">
-			<p class="info__item-title info__item-title--table">Юридические лица:</p>
-			<ul class="info__table">`;
-
-	for (let item of object['object'].open_hours){
-		console.log(item)
-		contentTable1 += `
-			<li class="info__table-row">
-				<p class="info__table-title">`+item['days']+`</p>
-				<p class="info__table-text">`+item['hours']+`</p>
-			</li>
-		`
-	}
-	contentTable1 += `
-		</ul>
-		</li>
-	`;
-
-	contentTable2 = `<li class="info__item info__item--big">
-			<p class="info__item-title info__item-title--table">Физические лица:</p>
-			<ul class="info__table">`;
-	for (let item of object['object'].open_hours_individual){
-		contentTable2 += `
-			<li class="info__table-row">
-					<p class="info__table-title">`+item['days']+`</p>
-					<p class="info__table-text">`+item['hours']+`</p>
-				</li>
-		`
-	}
-	contentTable2 += `
-		</ul>
-		</li>
-	`;
-
-	let contentInfoSecond = `
-		<li class="info__item">
-			<p class="info__item-title">РКО:</p>
-			<p class="info__item-text">Есть РКО</p>
-		</li>
-		<li class="info__item">
-			<p class="info__item-title">Тип офиса:</p>
-			<p class="info__item-text">Универсальный</p>
-		</li>		
-	`;
-
-	let contentInfoThird = `
-	<li class="info__item">
-			<p class="info__item-title">Наличие СУО:</p>
-			<!-- = (поле == 'Y')? Да : Нет -->
-			<p class="info__item-text">Да</p>
-		</li>`;
-	let contentInfoFoth = `<li class="info__item">
-			<p class="info__item-title">Наличие пандуса:</p>
-			<p class="info__item-text">Да</p>
-		</li>
-	</ul>`;
-	let contenInfo = `<ul class="info__list scroll">`;
-	contenInfo += contentInfoFirst + contentTable1 + contentTable2 + contentInfoSecond + contentInfoThird + contentInfoFoth;
-	let contentForm = `
-	<form class="info__form info__form--individual">
-		<h2 class="title title--margin-bottom">Хотите встать в очередь?</h2>
-		<button class="button button--individual-before" type="button">Предзапись</button>
-		<button class="button buttop--individual-stand" type="button">Встать в очередь</button>
-	</form>
-	<form class="info__form info__form--legal">
-		<button class="button button--legal" type="button">Менеджеры этого отделения</button>
-	</form>`;
-
-	let contentAll = contentTitel + contentWork + contenInfo + contentForm;
-	block.innerHTML = contentAll;
 }
 
 ymaps.ready(init);
@@ -305,6 +339,11 @@ function init() {
     objectManager.objects.options.set("iconContentOffset", [15, 15])
     objectManager.objects.events.add('click', function (event) {
         let obj = objectManager.objects.getById(event.get('objectId'))
+		let array = []
+		array += obj
+		//
+		// console.log(obj.id, obj );
+		// createInfo(obj.id, array);
     })
     myMap.geoObjects.add(objectManager);
 
@@ -490,83 +529,89 @@ buttonOtherLegal.onclick = () => {
 
 //запись физ лиц
 
-const beforeIndivBlock = document.querySelector('.indiv');
-const buttonBeforeIndiv = document.querySelector('.button--individual-before');
-const buttonStandIndiv = document.querySelector('.buttop--individual-stand');
-const arrowIndiv = document.querySelector('.indiv__title-svg');
-const crossIndiv = document.querySelector('.cross--indiv');
-const buttonIndiv = document.querySelector('.button--indiv');
+function entryQueueIndiv () {
+	let beforeIndivBlock = document.querySelector('.indiv');
+	let buttonBeforeIndiv = document.querySelector('.button--individual-before');
+	let buttonStandIndiv = document.querySelector('.buttop--individual-stand');
+	let arrowIndiv = document.querySelector('.indiv__title-svg');
+	let crossIndiv = document.querySelector('.cross--indiv');
+	let buttonIndiv = document.querySelector('.button--indiv');
 
-buttonBeforeIndiv.onclick = () => {
-	pointBlock.classList.remove('active');
-	pointArrow.classList.remove('active');
-	pointArrow.classList.add('rotate');
-	infoBlock.classList.remove('active');
-	beforeIndivBlock.classList.add('active');
-}
+	buttonBeforeIndiv.onclick = () => {
+		pointBlock.classList.remove('active');
+		pointArrow.classList.remove('active');
+		pointArrow.classList.add('rotate');
+		infoBlock.classList.remove('active');
+		beforeIndivBlock.classList.add('active');
+	}
 
-arrowIndiv.onclick = () => {
-	pointBlock.classList.add('active');
-	pointArrow.classList.add('active');
-	pointArrow.classList.remove('rotate');
-	infoBlock.classList.add('active');
-	beforeIndivBlock.classList.remove('active');
-}
+	arrowIndiv.onclick = () => {
+		pointBlock.classList.add('active');
+		pointArrow.classList.add('active');
+		pointArrow.classList.remove('rotate');
+		infoBlock.classList.add('active');
+		beforeIndivBlock.classList.remove('active');
+	}
 
-crossIndiv.onclick = () => {
-	beforeIndivBlock.classList.remove('active');
-	singIndiv = false;
-}
-buttonIndiv.onclick = () => {
-	beforeIndivBlock.classList.remove('active');
-	havQueue = true;
-	queueBlock.classList.add('active');
-}
+	crossIndiv.onclick = () => {
+		beforeIndivBlock.classList.remove('active');
+		singIndiv = false;
+	}
+	buttonIndiv.onclick = () => {
+		beforeIndivBlock.classList.remove('active');
+		havQueue = true;
+		queueBlock.classList.add('active');
+	}
 
-buttonStandIndiv.onclick = () => {
-	pointBlock.classList.remove('active');
-	pointArrow.classList.remove('active');
-	pointArrow.classList.add('rotate');
-	infoBlock.classList.remove('active');
-	havQueue = true;
-	queueBlock.classList.add('active');
+	buttonStandIndiv.onclick = () => {
+		pointBlock.classList.remove('active');
+		pointArrow.classList.remove('active');
+		pointArrow.classList.add('rotate');
+		infoBlock.classList.remove('active');
+		havQueue = true;
+		queueBlock.classList.add('active');
+	}
 }
-
 
 //запись юрлица
+function entryQueueLegal(){
+	let legalOtherBlock = document.querySelector('.legal-other');
+	let buttonLegal = document.querySelector('.button--legal');
+	let arrowLegalOther = document.querySelector('.legal-other__title-svg');
+	let crossLegalOther = document.querySelector('.cross--legal-other');
+	let buttonLegalOther = document.querySelector('.button--legal-other-sing');
 
-const legalOtherBlock = document.querySelector('.legal-other');
-const buttonLegal = document.querySelector('.button--legal');
-const arrowLegalOther = document.querySelector('.legal-other__title-svg');
-const crossLegalOther = document.querySelector('.cross--legal-other');
-const buttonLegalOther = document.querySelector('.button--legal-other-sing');
+	buttonLegal.onclick = () => {
+		pointBlock.classList.remove('active');
+		pointArrow.classList.remove('active');
+		pointArrow.classList.add('rotate');
+		infoBlock.classList.remove('active');
+		legalOtherBlock.classList.add('active');
+	}
 
-buttonLegal.onclick = () => {
-	pointBlock.classList.remove('active');
-	pointArrow.classList.remove('active');
-	pointArrow.classList.add('rotate');
-	infoBlock.classList.remove('active');
-	legalOtherBlock.classList.add('active');
+	arrowLegalOther.onclick = () => {
+		pointBlock.classList.add('active');
+		pointArrow.classList.add('active');
+		pointArrow.classList.remove('rotate');
+		infoBlock.classList.add('active');
+		legalOtherBlock.classList.remove('active');
+	}
+
+	crossLegalOther.onclick = () => {
+		legalOtherBlock.classList.remove('active');
+		singIndiv = false;
+	}
+
+	buttonLegalOther.onclick = () => {
+		legalOtherBlock.classList.remove('active');
+		havQueue = true;
+		queueBlock.classList.add('active');
+	}
+
 }
 
-arrowLegalOther.onclick = () => {
-	pointBlock.classList.add('active');
-	pointArrow.classList.add('active');
-	pointArrow.classList.remove('rotate');
-	infoBlock.classList.add('active');
-	legalOtherBlock.classList.remove('active');
-}
 
-crossLegalOther.onclick = () => {
-	legalOtherBlock.classList.remove('active');
-	singIndiv = false;
-}
 
-buttonLegalOther.onclick = () => {
-	legalOtherBlock.classList.remove('active');
-	havQueue = true;
-	queueBlock.classList.add('active');
-}
 
 
 //очередь

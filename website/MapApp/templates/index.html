@@ -38,7 +38,7 @@
     <form class="filter">
         <div class="title-block">
             <h2 class="title">Запись для физических лиц</h2>
-            <img class="cross cross--filter" src={% static 'images/map.js' %} alt="">
+            <img class="cross cross--filter" src={% static '/images/cross.svg' %} alt="">
         </div>
         <h2 class="title title--margin-bottom">Выбирете услугу:</h2>
         <div class="filter__office scroll">
@@ -110,12 +110,7 @@
             </button>
         </form>
         <ul class="point__list scroll">
-            <li class="point__item point__item--example">
-                <img class="point__item-work " src={% static '/images/work/2.svg' %} alt="">
-                <p class="point__item-text">г. Москва, Красная площадь, д. 3 г. Москва, Красная площадь, д. 3 г. Москва,
-                    Красная площадь, д. 3</p>
-                <p class="point__item-distance">419м</p>
-            </li>
+
         </ul>
         <button class="button button--point" type='button'>Изменить фильтры</button>
     </aside>
