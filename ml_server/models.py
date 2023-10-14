@@ -70,7 +70,7 @@ class Operation:
 
         dt1 = parse(self.start)
         dt2 = parse(self.finish)
-        parse("2015-02-24T13:00:00-08:00")
+        print(dt2, dt1)
 
 
     def clean(self):
