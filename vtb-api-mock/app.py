@@ -9,6 +9,9 @@ db.init_app(app)
 app.json.ensure_ascii = False
 
 
+# mock 5000
+# ml 5001
+
 @app.route('/operations', methods=['GET'])
 def get_operations():
     coupons = Operation.query.order_by('office_id', "service_type")
