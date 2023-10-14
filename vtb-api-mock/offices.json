@@ -200,8 +200,7 @@
                 "hours": null
             }
         ],
-        "rko": "нет РКО",
-        "openHoursIndividual": [
+        "rko": "нет РКО",        "openHoursIndividual": [
             {
                 "days": "пн",
                 "hours": "10:00-19:00"

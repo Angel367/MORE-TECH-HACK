@@ -1,0 +1,132 @@
+from flask import Flask, jsonify, request
+from models import *
+
+app = Flask(__name__)
+app.config.from_pyfile('config.py')
+
+db.init_app(app)
+
+@app.route('/operations', methods=['GET'])
+def get_operation():
+    coupons = Operation.query.all()
+    coupons_dict = [coupon.__dict__ for coupon in coupons]
+    for coupon_dict in coupons_dict:
+        coupon_dict.pop('_sa_instance_state')
+    return jsonify(coupons_dict)
+
+
+@app.route('/operations/<int:id_operation>', methods=['GET'])
+def get_coupon(id_operation):
+    coupon = Operation.query.get(id_operation)
+    if coupon is None:
+        return jsonify({'message': 'Операция не найдена'}), 404
+    else:
+        coupon_dict = coupon.__dict__
+        coupon_dict.pop('_sa_instance_state')
+        return jsonify(coupon_dict)
+
+
+@app.route('/operations', methods=['POST'])
+def create_operation():
+    data = request.get_json()
+    if 'office_id' not in data or 'service_type' not in data or 'client_id' not in data:
+        # Return a 400 error if missing name or email
+        return jsonify({'message': 'Тип операции, номер талона, id отделения обязательны для заполнения'}), 400
+    Office.query.get_or_404(data['office_id'], 'Неверно введен номер отделения')
+    operation = Operation( office_id=data['office_id'],
+                          service_type=data['service_type'], client_id=data['client_id'])
+    db.session.add(operation)
+    db.session.commit()
+    coupon_dict = operation.__dict__
+    coupon_dict.pop('_sa_instance_state')
+    return jsonify(coupon_dict), 201
+
+@app.route('/coupons', methods=['GET'])
+def get_coupons():
+    coupons = Coupon.query.all()
+    coupons_dict = [coupon.__dict__ for coupon in coupons]
+    for coupon_dict in coupons_dict:
+        coupon_dict.pop('_sa_instance_state')
+    return jsonify(coupons_dict)
+
+
+@app.route('/coupons/<int:id_coupon>', methods=['GET'])
+def get_coupon(id_coupon):
+    coupon = Coupon.query.get(id_coupon)
+    if coupon is None:
+        return jsonify({'message': 'Талон не найден'}), 404
+    else:
+        coupon_dict = coupon.__dict__
+        coupon_dict.pop('_sa_instance_state')
+        return jsonify(coupon_dict)
+
+
+@app.route('/coupons', methods=['POST'])
+def create_coupon():
+    data = request.get_json()
+    if 'office_id' not in data or 'service_type' not in data or 'client_id' not in data:
+        return jsonify({'message': 'Тип операции, номер талона, id отделения обязательны для заполнения'}), 400
+    Office.query.get_or_404(data['office_id'], 'Неверно введен номер отделения')
+    operation = Operation(office_id=data['office_id'], service_type=data['service_type'], client_id=data['client_id'])
+    db.session.add(operation)
+    db.session.commit()
+    coupon = Coupon(operation_id=operation.id)
+    db.session.add(coupon)
+    db.session.commit()
+    coupon_dict = coupon.__dict__
+    coupon_dict.pop('_sa_instance_state')
+    return jsonify(coupon_dict), 201
+
+
+@app.route('/appointments', methods=['POST'])
+def create_appointment():
+    data = request.get_json()
+    if 'window_id' not in data or 'office_id' not in data or 'service_type' not in data or 'client_id' not in data:
+        # Return a 400 error if missing name or email
+        return jsonify({'message': 'Тип операции, номер талона, id отделения обязательны для заполнения'}), 400
+    elif 'office_id' not in data:
+        return jsonify({'message': 'Неверно введен номер отделения'}), 400
+    else:
+        coupon = Appointment(client_id=data['client_id'], )
+        db.session.add(coupon)
+        db.session.commit()
+        coupon_dict = coupon.__dict__
+        coupon_dict.pop('_sa_instance_state')
+        return jsonify(coupon_dict), 201
+
+
+@app.route('/windows', methods=['GET'])
+def get_windows():
+    windows = AppointmentWindow.query.all()
+    windows_dict = [window.__dict__ for window in windows]
+    for coupon_dict in windows_dict:
+        coupon_dict.pop('_sa_instance_state')
+    return jsonify(windows_dict)
+
+
+# @app.route('/appointments', methods=['GET'])
+# def get_appointments():
+#     coupons = Appointment.query.all()
+#     coupons_dict = [coupon.__dict__ for coupon in coupons]
+#     for coupon_dict in coupons_dict:
+#         coupon_dict.pop('_sa_instance_state')
+#     return jsonify(coupons_dict)
+
+
+@app.route('/appointments/<int:id_appointment>', methods=['GET'])
+def get_client(id_appointment):
+    appointment = Client.query.get(id_appointment)
+    if appointment is None:
+        return jsonify({'message': 'Запись не найден'}), 404
+    else:
+        appointment = appointment.__dict__
+        appointment.pop('_sa_instance_state')
+        return jsonify(appointment)
+
+
+if __name__ == '__main__':
+    # with app.app_context():
+    #     db.drop_all()
+    #     db.create_all()
+    #     create_data()
+    app.run(debug=True, use_reloader=False)
