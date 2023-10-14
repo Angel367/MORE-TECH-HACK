@@ -14,84 +14,69 @@ function init() {
             clusterIconContentLayout: null
         }),
         objectManager = new ymaps.ObjectManager({
-            // Чтобы метки начали кластеризоваться, выставляем опцию.
             clusterize: true,
-            // ObjectManager принимает те же опции, что и кластеризатор.
             gridSize: 64,
-            // Макет метки кластера pieChart.
-            //clusterIconLayout: "default#pieChart"
         });
     objectManager.objects.options.set("iconLayout", 'default#imageWithContent')
     objectManager.objects.options.set("iconImageHref", "static/icons/vtb_icon.png")
     objectManager.objects.options.set("iconImageSize", [48, 48])
     objectManager.objects.options.set("iconImageOffset", [-24, -24])
     objectManager.objects.options.set("iconContentOffset", [15, 15])
+    objectManager.objects.events.add('click', function () {
+        //alert("w")
+        // какой-нибудь адский div выплывает с информацией, div можно генерировать по шаблону
+    })
+    // либо
+    // objectManager.events.add('click', function () {
+    //     alert("w")
+    // })
     myMap.geoObjects.add(objectManager);
 
-        var listBoxItems = ['invalid', 'USD_support']
-            .map(function (title) {
-                return new ymaps.control.ListBoxItem({
-                    data: {
-                        content: title
-                    },
-                    state: {
-                        selected: true
-                    }
-                })
-            }),
-        reducer = function (filters, filter) {
-            filters[filter.data.get('content')] = filter.isSelected();
-            return filters;
-        },
-        // Теперь создадим список, содержащий 5 пунктов.
-        listBoxControl = new ymaps.control.ListBox({
-            data: {
-                content: 'Фильтр',
-                title: 'Фильтр'
-            },
-            items: listBoxItems,
-            state: {
-                // Признак, развернут ли список.
-                expanded: true,
-                filters: listBoxItems.reduce(reducer, {})
-            }
+    document.getElementById("office_selector").onchange = function (){
+        objectManager.removeAll()
+        $.ajax({
+            url: "static/data/offices_data.json"
+        }).done(function(data) {
+            objectManager.add(data);
         });
-    myMap.controls.add(listBoxControl);
+    }
+    document.getElementById("atm_selector").onchange = function (){
+        objectManager.removeAll()
+        $.ajax({
+            url: "static/data/atms_data.json"
+        }).done(function(data) {
+            objectManager.add(data);
+        });
+    }
+    let activeZone = null
+    myMap.events.add('boundschange', function (event) {
+    if (event.get('newZoom') !== event.get('oldZoom') || event.get('oldCenter') !== event.get('newCenter')) {
+        myMap.geoObjects.remove(activeZone)
+            activeZone = new ymaps.GeoObject({
+                geometry: {
+                    type: "Rectangle",
+                    coordinates: myMap.getBounds(),
+                },
+                properties: {
+                }
+            }, {
+                opacity: 0,
+                strokeWidth: 0
+            });
+            myMap.geoObjects.add(activeZone);
+            let allObjects = objectManager.objects.getAll();
+            console.log(allObjects)
 
-    // Добавим отслеживание изменения признака, выбран ли пункт списка.
-    listBoxControl.events.add(['select', 'deselect'], function (e) {
-        var listBoxItem = e.get('target');
-        var filters = ymaps.util.extend({}, listBoxControl.state.get('filters'));
-        filters[listBoxItem.data.get('content')] = listBoxItem.isSelected();
-        listBoxControl.state.set('filters', filters);
-    });
+            var objectsInRectangle = [];
 
-    var filterMonitor = new ymaps.Monitor(listBoxControl.state);
-    filterMonitor.add('filters', function (filters) {
-        // Применим фильтр.
-        objectManager.setFilter(getFilterFunction(filters));
-    });
-
-    function getFilterFunction(categories) {
-        return function (obj) {
-        var content = obj.properties.tags;
-        console.log(content)
-
-        // Проверяем, есть ли хотя бы одна активная категория в метке
-        for (let i = 0; i < 2; i++) {
-            //console.log(cont)
-            if (categories[content[i]]) {
-                return true;
+            for (var i = 0; i < allObjects.length; i++) {
+                var object = allObjects[i];
+                if (activeZone.geometry.contains(object.geometry.coordinates)) {
+                    objectsInRectangle.push(object);
+                }
             }
-        }
-
-        return false; // Метка не соответствует ни одной активной категории
-    };
+            console.log(objectsInRectangle)
     }
 
-    $.ajax({
-        url: "static/data/data.json"
-    }).done(function(data) {
-        objectManager.add(data);
-    });
+});
 }

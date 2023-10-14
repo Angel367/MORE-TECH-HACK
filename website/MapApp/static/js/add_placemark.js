@@ -15,11 +15,10 @@ export function add_placemark(map, coords, type = "") {
         // Смещение слоя с содержимым относительно слоя с картинкой.
         iconContentOffset: [15, 15]
     });
-    return myPlacemark
-    //map.geoObjects.add(myPlacemark)
+    map.geoObjects.add(myPlacemark)
 }
 
-export function add_all_offices_placemarks(map, objectManager) {
+export function add_all_offices_placemarks(map) {
     const filePath = 'static/data/offices.json';
     fetch(filePath)
         .then(response => response.json())
@@ -29,8 +28,7 @@ export function add_all_offices_placemarks(map, objectManager) {
                     const item = data[i];
                     const latitude = item.latitude;
                     const longitude = item.longitude;
-                    let new_placemark = add_placemark(map, [latitude, longitude])
-                    objectManager.add(new_placemark)
+                    add_placemark(map, [latitude, longitude])
                 }
             } else {
                 throw new Error('JSON data is not in the expected format');
