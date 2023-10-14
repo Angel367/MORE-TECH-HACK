@@ -17,6 +17,22 @@ def convert_to_new_format(input_json):
         for param, values in data["services"].items():
             if values["serviceActivity"] == "AVAILABLE":
                 services.append(param)
+        print(services)
+        for i in range(0, len(services)):
+            if services[i] == 'nfcForBankCards':
+                services[i] = 'NFC (бесконтактное обслуживание)'
+            elif services[i] == 'qrRead':
+                services[i] = 'Платежи по QR-коду'
+            elif services[i] == 'blind':
+                services[i] = 'Доступен для слабовидящих и незрячих'
+            elif services[i] == 'wheelchair':
+                services[i] = 'Доступен для маломобильных граждан'
+            elif services[i] == 'wheelchair':
+                services[i] = 'Доступен для маломобильных граждан'
+            elif services[i] == 'supportsChargeRub':
+                services[i] = 'Внесение и выдача наличных'
+            elif services[i] == 'supportsRub':
+                services.remove('supportsRub')
 
         feature = {
             "type": "Feature",
@@ -26,8 +42,9 @@ def convert_to_new_format(input_json):
                 "type": "Point",
                 "coordinates": coordinates
             },
-            "services": services
-
+            "services": services,
+            "name": "Банкомат",
+            "isATM": True
         }
         features.append(feature)
         id_counter += 1
