@@ -51,6 +51,14 @@ for item in source_json:
     services = [key for key, value in item.items() if value == "Y"]
     res = []
     address = item["address"]
+    name = item['salePointName']
+    sale_point_format = item['salePointFormat']
+    rko = item['rko']
+    office_type = item['salePointFormat']
+    if not rko or 'нет' in rko:
+        rko = False
+    else:
+        rko = True
     def expand_days(day_range):
         days = []
         if ',' in day_range:
@@ -59,7 +67,7 @@ for item in source_json:
             day_ranges = day_range.split('-')
         else:
             day_ranges = day_range.split(',')
-        print(day_ranges)
+        #print(day_ranges)
         if day_ranges == ['Не обслуживает ЮЛ']:
             return ['no']
         elif day_ranges == ['пн', 'пт']:
@@ -84,7 +92,6 @@ for item in source_json:
         output_json = {
             type: []
         }
-
         for entry in input_json.get(type, []):
             #print(entry)
             days = expand_days(entry["days"])
@@ -97,6 +104,13 @@ for item in source_json:
         return output_json
 
 
+    open_hours_individual = convert_to_desired_format(item, "openHoursIndividual")['openHoursIndividual']
+    for item1 in open_hours_individual:
+        item1['days'] = item1['days'].capitalize()
+    open_hours = convert_to_desired_format(item, "openHours")["openHours"]
+    for item1 in open_hours:
+        item1['days'] = item1['days'].capitalize()
+    print(open_hours_individual)
     feature = {
         "type": "Feature",
         "id": id_counter,
@@ -105,10 +119,13 @@ for item in source_json:
             "coordinates": coordinates
         },
         "services": services,
-        "open_hours_individual": convert_to_desired_format(item, "openHoursIndividual")['openHoursIndividual'],
-        "open_hours": convert_to_desired_format(item, "openHours")["openHours"],
-        "address": address
-
+        "open_hours_individual": open_hours_individual,
+        "open_hours": open_hours,
+        "address": address,
+        "name": name,
+        "isATM": False,
+        'office_type': sale_point_format,
+        "isRKO": rko
     }
 
     features.append(feature)
