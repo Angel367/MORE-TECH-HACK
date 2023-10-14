@@ -61,13 +61,14 @@ pointArrow.onclick = () => {
 const infoBlock = document.querySelector('.info');
 const infoArrow = document.querySelector('.info__title-svg')
 
-document.querySelector('.point__item--example').onclick = () => {
+document.querySelectorAll('.point__item').forEach(a => a.onclick = () => {
     if (!infoBlock.classList.contains('active')) {
         infoBlock.classList.add('active');
+		create_info_div()
     }
-}
 
-document.querySelector('.point__item--example').onclick = () => {
+
+document.querySelector('.point__item').onclick = () => {
 	if (!infoBlock.classList.contains('active')){
 		infoBlock.classList.add('active');
 		document.querySelector('.info__form--legal').classList.remove('active');
@@ -106,8 +107,175 @@ function update_point__list(map, objects, userCoords) {
 	console.log(objects_to_point__list)
     for (let object of objects_to_point__list) {
         let image_num = 2
-        point_list.insertAdjacentHTML("beforeend", `<li class="point__item"><img class="point__item-work" src="static/images/work/`+image_num+`.svg" alt=""><p class="point__item-text">` + object['object'].address + `</p><p class="point__item-distance">`+object['distance_from_user']+`м</p></li>`)
+        point_list.insertAdjacentHTML("beforeend", `<li class="point__item" data-set=`+object['object'].id+`><img class="point__item-work" src="static/images/work/`+image_num+`.svg" alt=""><p class="point__item-text">` + object['object'].address + `</p><p class="point__item-distance">`+object['distance_from_user']+`м</p></li>`)
     }
+}
+
+function create_info_div(params) {
+	/*
+	* params:
+	* 	- name
+	*	- id
+	*
+	* */
+	let div = document.querySelector('.info');
+	div.innerHTML = ''
+	content = `
+	<div class="info__title">
+            <svg class="arrow info__title-svg" width="28" height="24" viewBox="0 0 28 24" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.93934 10.9393C0.353553 11.5251 0.353553 12.4749 0.93934 13.0607L10.4853 22.6066C11.0711 23.1924 12.0208 23.1924 12.6066 22.6066C13.1924 22.0208 13.1924 21.0711 12.6066 20.4853L4.12132 12L12.6066 3.51472C13.1924 2.92893 13.1924 1.97919 12.6066 1.3934C12.0208 0.807613 11.0711 0.807613 10.4853 1.3934L0.93934 10.9393ZM28 10.5L2 10.5L2 13.5L28 13.5L28 10.5Z"/>
+            </svg>
+            <h3 class="info__name">ДО «Солнечногорский» Филиала № 7701 Банка ВТБ (ПАО)</h3>
+        </div>
+        <button class="button button--distance" type="button">Проложить маршрут</button>
+        <div class="point__work">
+            <h4 class="point__work-title">Загруженность</h4>
+            <ul class="point__work-list">
+                <li class="point__work-item">
+                    <img class="point__work-svg" src={% static '/images/work-item/0.svg' %} alt="">
+                    <p class="point__work-text">9</p>
+                </li>
+                <li class="point__work-item">
+                    <img class="point__work-svg" src={% static '/images/work-item/0.svg' %} alt="">
+                    <p class="point__work-text">10</p>
+                </li>
+                <li class="point__work-item">
+                    <img class="point__work-svg" src={% static '/images/work-item/0.svg' %} alt="">
+                    <p class="point__work-text">11</p>
+                </li>
+                <li class="point__work-item">
+                    <img class="point__work-svg" src={% static '/images/work-item/0.svg' %} alt="">
+                    <p class="point__work-text">12</p>
+                </li>
+                <li class="point__work-item">
+                    <img class="point__work-svg" src={% static '/images/work-item/1.svg' %} alt="">
+                    <p class="point__work-text">13</p>
+                </li>
+                <li class="point__work-item">
+                    <img class="point__work-svg" src={% static '/images/work-item/2.svg' %} alt="">
+                    <p class="point__work-text">14</p>
+                </li>
+                <li class="point__work-item">
+                    <img class="point__work-svg" src={% static '/images/work-item/2.svg' %} alt="">
+                    <p class="point__work-text">15</p>
+                </li>
+                <li class="point__work-item">
+                    <img class="point__work-svg" src={% static '/images/work-item/2.svg' %} alt="">
+                    <p class="point__work-text">16</p>
+                </li>
+                <li class="point__work-item">
+                    <img class="point__work-svg" src={% static '/images/work-item/2.svg' %} alt="">
+                    <p class="point__work-text">17</p>
+                </li>
+                <li class="point__work-item">
+                    <img class="point__work-svg" src={% static '/images/work-item/2.svg' %} alt="">
+                    <p class="point__work-text">18</p>
+                </li>
+            </ul>
+        </div>
+        <ul class="info__list scroll">
+            <li class="info__item">
+                <p class="info__item-title">Адрес:</p>
+                <p class="info__item-text">141506, Московская область, г. Солнечногорск, ул. Красная, д. 60</p>
+            </li>
+            <li class="info__item">
+                <p class="info__item-title">Метро:</p>
+                <p class="info__item-text">МЦД-1 Белорусско-Савёловский диаметр, станция Лобня</p>
+            </li>
+            <li class="info__item info__item--big">
+                <p class="info__item-title info__item-title--table">Юридические лица:</p>
+                <ul class="info__table">
+                    <li class="info__table-row">
+                        <p class="info__table-title">пн:</p>
+                        <p class="info__table-text">09:00-18:00</p>
+                    </li>
+                    <li class="info__table-row">
+                        <p class="info__table-title">вт:</p>
+                        <p class="info__table-text">09:00-18:00</p>
+                    </li>
+                    <li class="info__table-row">
+                        <p class="info__table-title">ср:</p>
+                        <p class="info__table-text">09:00-18:00</p>
+                    </li>
+                    <li class="info__table-row">
+                        <p class="info__table-title">чт:</p>
+                        <p class="info__table-text">09:00-18:00</p>
+                    </li>
+                    <li class="info__table-row">
+                        <p class="info__table-title">пт:</p>
+                        <p class="info__table-text">09:00-18:00</p>
+                    </li>
+                    <li class="info__table-row">
+                        <p class="info__table-title">сб:</p>
+                        <p class="info__table-text">выходной</p>
+                    </li>
+                    <li class="info__table-row">
+                        <p class="info__table-title">вс:</p>
+                        <p class="info__table-text">выходной</p>
+                    </li>
+                </ul>
+            </li>
+            <li class="info__item info__item--big">
+                <p class="info__item-title info__item-title--table">Физические лица:</p>
+                <ul class="info__table">
+                    <li class="info__table-row">
+                        <p class="info__table-title">пн:</p>
+                        <p class="info__table-text">09:00-18:00</p>
+                    </li>
+                    <li class="info__table-row">
+                        <p class="info__table-title">вт:</p>
+                        <p class="info__table-text">09:00-18:00</p>
+                    </li>
+                    <li class="info__table-row">
+                        <p class="info__table-title">ср:</p>
+                        <p class="info__table-text">09:00-18:00</p>
+                    </li>
+                    <li class="info__table-row">
+                        <p class="info__table-title">чт:</p>
+                        <p class="info__table-text">09:00-18:00</p>
+                    </li>
+                    <li class="info__table-row">
+                        <p class="info__table-title">пт:</p>
+                        <p class="info__table-text">09:00-18:00</p>
+                    </li>
+                    <li class="info__table-row">
+                        <p class="info__table-title">сб:</p>
+                        <p class="info__table-text">выходной</p>
+                    </li>
+                    <li class="info__table-row">
+                        <p class="info__table-title">вс:</p>
+                        <p class="info__table-text">выходной</p>
+                    </li>
+                </ul>
+            </li>
+            <li class="info__item">
+                <p class="info__item-title">РКО:</p>
+                <p class="info__item-text">Есть РКО</p>
+            </li>
+            <li class="info__item">
+                <p class="info__item-title">Тип офиса:</p>
+                <p class="info__item-text">Универсальный</p>
+            </li>
+            <li class="info__item">
+                <p class="info__item-title">Наличие СУО:</p>
+                <!-- = (поле == 'Y')? Да : Нет -->
+                <p class="info__item-text">Да</p>
+            </li>
+            <li class="info__item">
+                <p class="info__item-title">Наличие пандуса:</p>
+                <p class="info__item-text">Да</p>
+            </li>
+        </ul>
+        <form class="info__form info__form--individual">
+            <h2 class="title title--margin-bottom">Хотите встать в очередь?</h2>
+            <button class="button button--individual-before" type="button">Предзапись</button>
+            <button class="button buttop--individual-stand" type="button">Встать в очередь</button>
+        </form>
+        <form class="info__form info__form--legal">
+            <button class="button button--legal" type="button">Менеджеры этого отделения</button>
+        </form>
+	`
 }
 
 ymaps.ready(init);

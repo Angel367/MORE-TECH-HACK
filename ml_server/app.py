@@ -5,8 +5,8 @@ import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, jsonify, request, Response
 
-from ml_server.models import *
-from ml_server.panda import *
+from models import *
+from panda import *
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -59,7 +59,7 @@ def get_data_from_api():
 @app.route('/index', methods=['POST'])
 def get_ml_data():
     # request.headers['Content-Type'] = "application/json"
-    # data = request.get_json()
+    data = request.get_json()
     data = []
     with open("dir/SERVICES_prediction_week.csv", encoding="utf-8") as f:
         f_reader = csv.reader(f, delimiter=",")
