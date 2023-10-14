@@ -50,6 +50,7 @@ for item in source_json:
     coordinates = [item["latitude"], item["longitude"]]
     services = [key for key, value in item.items() if value == "Y"]
     res = []
+    address = item["address"]
 
 
     # for ohi in item['openHoursIndividual']:
@@ -132,7 +133,8 @@ for item in source_json:
         },
         "services": services,
         "open_hours_individual": convert_to_desired_format(item, "openHoursIndividual")['openHoursIndividual'],
-        "open_hours": convert_to_desired_format(item, "openHours")["openHours"]
+        "open_hours": convert_to_desired_format(item, "openHours")["openHours"],
+        "address": address
 
     }
 
