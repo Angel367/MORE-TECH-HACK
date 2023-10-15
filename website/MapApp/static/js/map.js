@@ -297,7 +297,7 @@ function createContentInfo(object) {
 }
 
 
-function create_info_div(id, array) {
+function create_info_div(id, array, myObject=null) {
 	/*
 	* params:
 	* 	- name
@@ -305,6 +305,11 @@ function create_info_div(id, array) {
 	*
 	* */
 	let block = document.querySelector('.info');
+	if (myObject != null) {
+		myObject = {'object': myObject}
+		block.innerHTML = createContentInfo(myObject);
+		return
+	}
 	block.innerHTML = ''
 	let object;
 	for (let item of array){
@@ -339,11 +344,8 @@ function init() {
     objectManager.objects.options.set("iconContentOffset", [15, 15])
     objectManager.objects.events.add('click', function (event) {
         let obj = objectManager.objects.getById(event.get('objectId'))
-		let array = []
-		array += obj
-		//
-		// console.log(obj.id, obj );
-		// createInfo(obj.id, array);
+		console.log(obj)
+		create_info_div(null,null, obj)
     })
     myMap.geoObjects.add(objectManager);
 

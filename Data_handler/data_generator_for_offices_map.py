@@ -107,9 +107,16 @@ for item in source_json:
     open_hours_individual = convert_to_desired_format(item, "openHoursIndividual")['openHoursIndividual']
     for item1 in open_hours_individual:
         item1['days'] = item1['days'].capitalize()
+        if item1['days'] == 'No':
+            item1['days'] = 'Не обслуживаются'
+            item1['hours'] = ""
     open_hours = convert_to_desired_format(item, "openHours")["openHours"]
     for item1 in open_hours:
         item1['days'] = item1['days'].capitalize()
+        if item1['days'] == 'No':
+            item1['days'] = 'Не обслуживаются'
+            item1['hours'] = ""
+
     print(open_hours_individual)
     feature = {
         "type": "Feature",

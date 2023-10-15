@@ -12,8 +12,6 @@ def convert_to_new_format(input_json):
         if address == '' or not address:
             continue
         services = []
-        if data["latitude"] == 55.748914:
-            print('')
         for param, values in data["services"].items():
             if values["serviceActivity"] == "AVAILABLE":
                 services.append(param)
