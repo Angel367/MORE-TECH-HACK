@@ -78,7 +78,12 @@ def get_ml_office_data():
         for item in predict_value:
             average += int(item)
         average /= len(predict_value)
-        return jsonify({'Predict': average})
+        if average < 8:
+            return jsonify({'Predict': 0})
+        elif 8 <= average <= 8.75:
+            return jsonify({'Predict': 1})
+        else:
+            return jsonify({'Predict': 2})
     else:
         return jsonify({'error': 'No matching data found'})
 
@@ -102,7 +107,12 @@ def get_ml_atm_data():
         for item in predict_value:
             average += int(item)
         average /= len(predict_value)
-        return jsonify({'Predict': average})
+        if average < 8:
+            return jsonify({'Predict': 0})
+        elif 8 <= average <= 8.75:
+            return jsonify({'Predict': 1})
+        else:
+            return jsonify({'Predict': 2})
     else:
         return jsonify({'error': 'No matching data found'})
 
