@@ -88,7 +88,7 @@ def get_ml_data():
     function_list = int(request.args.get('FunctionList'))
     time = int(request.args.get('Time'))
     day = int(request.args.get('Day'))
-    data = pd.read_csv('Office_ml_data/SERVICES_prediction_week'+str(bank_id)+'.csv')
+    data = pd.read_csv('ATM_ml_data/SERVICES_prediction_week'+str(bank_id)+'.csv')
     # Фильтруйте данные на основе параметров запроса
     filtered_data = data[(data['BankID'] == bank_id) & (data['FunctionList'] == function_list) & (data['Time'] == time)]
 
