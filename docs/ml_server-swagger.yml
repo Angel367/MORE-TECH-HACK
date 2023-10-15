@@ -1,0 +1,74 @@
+swagger: "2.0"
+info:
+  title: "ML_server API"
+  version: "1.0"
+basePath: "/"
+schemes:
+  - "http"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+paths:
+  /get_office:
+    get:
+      summary: Получить данные офиса о загруженности
+      parameters:
+        - name: BankID
+          in: query
+          type: integer
+          required: true
+          description: "Идентификатор банка."
+        - name: FunctionList
+          in: query
+          type: integer
+          required: true
+          description: "Список функций."
+        - name: Time
+          in: query
+          type: integer
+          required: true
+          description: "Время."
+        - name: Day
+          in: query
+          type: integer
+          description: "День недели."
+      responses:
+        200:
+          description: Успешно
+        400:
+          description: Неверный запрос
+      tags:
+        - Офис
+  /get_atm:
+    get:
+      summary: Получить данные банкомата о загруженности
+      parameters:
+        - name: BankID
+          in: query
+          type: integer
+          required: true
+          description: "Идентификатор банка."
+        - name: FunctionList
+          in: query
+          type: integer
+          required: true
+          description: "Список функций."
+        - name: Time
+          in: query
+          type: integer
+          required: true
+          description: "Время."
+        - name: Day
+          in: query
+          type: integer
+          description: "День недели."
+      responses:
+        200:
+          description: Успешно
+        400:
+          description: Неверный запрос
+      tags:
+        - Банкомат
+definitions: {}
+

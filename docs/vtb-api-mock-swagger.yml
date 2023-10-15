@@ -1,0 +1,188 @@
+swagger: "2.0"
+info:
+  title: "vtb-api-mock API"
+  version: "1.0"
+basePath: "/"
+schemes:
+  - "http"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+paths:
+  /operations:
+    get:
+      summary: Получить список операций
+      responses:
+        200:
+          description: Успешно
+      tags:
+        - Операции
+    post:
+      summary: Создать новую операцию
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              office_id:
+                type: integer
+              service_type:
+                type: string
+              client_id:
+                type: integer
+      responses:
+        201:
+          description: Создано
+        400:
+          description: Неверный запрос
+      tags:
+        - Операции
+  /operations/{id_operation}:
+    get:
+      summary: Получить операцию по ID
+      parameters:
+        - name: id_operation
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Успешно
+        404:
+          description: Не найдено
+      tags:
+        - Операции
+  /coupons:
+    get:
+      summary: Получить список талонов
+      responses:
+        200:
+          description: Успешно
+      tags:
+        - Талоны
+    post:
+      summary: Создать новый талон
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              office_id:
+                type: integer
+              service_type:
+                type: string
+              client_id:
+                type: integer
+      responses:
+        201:
+          description: Создано
+        400:
+          description: Неверный запрос
+      tags:
+        - Талоны
+  /coupons/{id_coupon}:
+    get:
+      summary: Получить талон по ID
+      parameters:
+        - name: id_coupon
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Успешно
+        404:
+          description: Не найдено
+      tags:
+        - Талоны
+  /offices_with_details/offices:
+    get:
+      summary: Получить информацию об отделениях (офисы)
+      responses:
+        200:
+          description: Успешно
+      tags:
+        - Офисы
+  /offices_with_details/atms:
+    get:
+      summary: Получить информацию об отделениях (банкоматы)
+      responses:
+        200:
+          description: Успешно
+      tags:
+        - Офисы
+  /offices:
+    get:
+      summary: Получить список отделений
+      responses:
+        200:
+          description: Успешно
+      tags:
+        - Офисы
+  /offices/{office_id}/managers:
+    get:
+      summary: Получить список менеджеров по ID отделения
+      parameters:
+        - name: office_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Успешно
+      tags:
+        - Офисы
+  /appointments:
+    post:
+      summary: Создать новую запись на прием
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              window_id:
+                type: integer
+              office_id:
+                type: integer
+              service_type:
+                type: string
+              client_id:
+                type: integer
+      responses:
+        201:
+          description: Создано
+        400:
+          description: Неверный запрос
+      tags:
+        - Записи на прием
+  /windows:
+    get:
+      summary: Получить список окон для записи
+      responses:
+        200:
+          description: Успешно
+      tags:
+        - Записи на прием
+  /appointments/{id_appointment}:
+    get:
+      summary: Получить запись на прием по ID
+      parameters:
+        - name: id_appointment
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Успешно
+        404:
+          description: Не найдено
+      tags:
+        - Записи на прием
+definitions: {}
