@@ -291,27 +291,19 @@ function createContentInfo(object) {
 	let contenInfo = `<ul class="info__list scroll">`;
 	contenInfo += contentInfoFirst + contentTable1 + contentTable2 + contentInfoSecond;
 
-	console.log(contenInfo)
 	let contentAll = contentTitel + contentWork + contenInfo + contentForm;
 	return contentAll;
 }
 
 
 function create_info_div(id, array) {
-	/*
-	* params:
-	* 	- name
-	*	- id
-	*
-	* */
 	let block = document.querySelector('.info');
 	block.innerHTML = ''
 	let object;
 	for (let item of array){
-		if (item['object'].id == id) {
-			object = item;
-			break;
-		}
+		if (item['object'].id !== id) continue;
+		object = item;
+		break;
 	}
 	block.innerHTML = createContentInfo(object);
 
@@ -340,10 +332,11 @@ function init() {
     objectManager.objects.events.add('click', function (event) {
         let obj = objectManager.objects.getById(event.get('objectId'))
 		let array = []
-		array += obj
-		//
-		// console.log(obj.id, obj );
-		// createInfo(obj.id, array);
+		array += {object: obj};
+		console.log(obj)
+		console.log(obj.id, array);
+		pointBlock.classList.add('active')
+		createInfo(obj.id, array);
     })
     myMap.geoObjects.add(objectManager);
 
