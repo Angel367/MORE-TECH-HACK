@@ -58,7 +58,7 @@ def get_data_from_api():
 
 
 @app.route('/get_office', methods=['GET'])
-def get_ml_data():
+def get_ml_office_data():
     # Получите параметры запроса: BankID, FunctionList, Time, Day
     bank_id = int(request.args.get('BankID'))
     function_list = int(request.args.get('FunctionList'))
@@ -82,7 +82,7 @@ def get_ml_data():
 
 
 @app.route('/get_atm', methods=['GET'])
-def get_ml_data():
+def get_ml_atm_data():
     # Получите параметры запроса: BankID, FunctionList, Time, Day
     bank_id = int(request.args.get('BankID'))
     function_list = int(request.args.get('FunctionList'))
