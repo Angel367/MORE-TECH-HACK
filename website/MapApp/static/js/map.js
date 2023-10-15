@@ -100,14 +100,7 @@ function update_point__list(map, objects, userCoords) {
 }
 
 
-async function createInfo(id, array, obj) {
-    request_url = 'http://127.0.0.1:5001/get_office?BankID=15&FunctionList=1&Time=3&Day=1'
-    let neuro_data = await fetch(request_url)
-        .then((response) => response.json())
-        .then((data) => {
-            return data
-        })
-    console.log(neuro_data)
+function createInfo(id, array, obj) {
     pointBlock.classList.add('active');
     infoBlock.classList.add('active');
     create_info_div(id, array, obj);
@@ -201,54 +194,17 @@ function createContentInfo(object) {
 		}
 		contentTable2 += `</ul></li>`;
 	}
-	let arrayWork = [
-		{
-			'hour' : 9,
-			'work' : 0,
-		},
-		{
-			'hour' : 10,
-			'work' : 0,
-		},
-		{
-			'hour' : 11,
-			'work' : 0,
-		},
-		{
-			'hour' : 12,
-			'work' : 0,
-		},
-		{
-			'hour' : 13,
-			'work' : 1,
-		},
-		{
-			'hour' : 14,
-			'work' : 2,
-		},
-		{
-			'hour' : 15,
-			'work' : 2,
-		},
-		{
-			'hour' : 16,
-			'work' : 2,
-		},
-		{
-			'hour' : 17,
-			'work' : 1,
-		},
-	]
+
 	let image_num = 0;
 	let contentWork = `
 		<div class="point__work">
 			<h4 class="point__work-title">Загруженность</h4>
 			<ul class="point__work-list">`;
-	for (let item of arrayWork) {
+	for (let i = 8; i<20; i++) {
 		contentWork+=`
 			<li class="point__work-item">
 				<img class="point__work-svg" src="static/images/work-item/` + item.work + `.svg" alt="">
-				<p class="point__work-text">`+item.hour+`</p>
+				<p class="point__work-text">`+i+`</p>
 			</li>`;
 	}
 	contentWork += `</ul></div>`;
@@ -782,4 +738,10 @@ class Queue {
 const queueObject = new Queue('.button--queue', '.queue', '.cross--queue', "");
 
 
+async function getOffice() {
+    const response = await fetch('http://127.0.0.1:5001/get_office?BankID=15&FunctionList=1&Time=3&Day=1');
+    const movies = await response.json();
+    return movies;
+}
 
+console.log(getOffice()['object'].Predict)
