@@ -1,5 +1,6 @@
 import atexit
 import csv
+import json
 
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -56,37 +57,53 @@ def get_data_from_api():
                           )
 
 
-@app.route('/index', methods=['POST'])
+@app.route('/get_office', methods=['GET'])
 def get_ml_data():
-    # request.headers['Content-Type'] = "application/json"
-    data = request.get_json()
-    data = []
-    with open("dir/SERVICES_prediction_week.csv", encoding="utf-8") as f:
-        f_reader = csv.reader(f, delimiter=",")
-        list_ = []
-        for row in f_reader:
-            office = office.get_by_id(row[1])
-            if 'office_id' in data and office.id != data['office_id']:
-                continue
-            if 'is_atms' in data and (data['is_atms'] == True
-                                      and not office.is_atms or
-                                      data['is_atms'] != True
-                                      and office.is_atms):
-                continue
-            if 'has_suo' in data and (data['has_suo'] == True
-                                      and not office.has_suo or
-                                      data['has_suo'] != True
-                                      and office.has_suo):
-                continue
-            if 'id_service' in data and data['id_service'] != row[2]:
-                continue
-            list_ = ServiceOffice(office=office,
-                                  name=row[2],
-                                  day_of_week=row[4],
-                                  hour=row[3],
-                                  duration_waiting_in_minutes=row[5])
-        print(list_.list_ser_offices.__dict__)
-        return jsonify(list_.list_ser_offices.__dict__), 200, {'Content-Type': 'application/json'}
+    # Получите параметры запроса: BankID, FunctionList, Time, Day
+    bank_id = int(request.args.get('BankID'))
+    function_list = int(request.args.get('FunctionList'))
+    time = int(request.args.get('Time'))
+    day = int(request.args.get('Day'))
+    data = pd.read_csv('Office_ml_data/SERVICES_prediction_week'+str(bank_id)+'.csv')
+    # Фильтруйте данные на основе параметров запроса
+    filtered_data = data[(data['BankID'] == bank_id) & (data['FunctionList'] == function_list) & (data['Time'] == time)]
+
+    if not filtered_data.empty:
+        # Извлеките значение Predict
+        predict_value = filtered_data['Predict'].values
+        print(predict_value)
+        average = 0
+        for item in predict_value:
+            average += int(item)
+        average /= len(predict_value)
+        return jsonify({'Predict': average})
+    else:
+        return jsonify({'error': 'No matching data found'})
+
+
+@app.route('/get_atm', methods=['GET'])
+def get_ml_data():
+    # Получите параметры запроса: BankID, FunctionList, Time, Day
+    bank_id = int(request.args.get('BankID'))
+    function_list = int(request.args.get('FunctionList'))
+    time = int(request.args.get('Time'))
+    day = int(request.args.get('Day'))
+    data = pd.read_csv('Office_ml_data/SERVICES_prediction_week'+str(bank_id)+'.csv')
+    # Фильтруйте данные на основе параметров запроса
+    filtered_data = data[(data['BankID'] == bank_id) & (data['FunctionList'] == function_list) & (data['Time'] == time)]
+
+    if not filtered_data.empty:
+        # Извлеките значение Predict
+        predict_value = filtered_data['Predict'].values
+        print(predict_value)
+        average = 0
+        for item in predict_value:
+            average += int(item)
+        average /= len(predict_value)
+        return jsonify({'Predict': average})
+    else:
+        return jsonify({'error': 'No matching data found'})
+
 
 
 if __name__ == '__main__':
