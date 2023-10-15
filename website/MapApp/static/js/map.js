@@ -291,6 +291,7 @@ function createContentInfo(object) {
 	let contenInfo = `<ul class="info__list scroll">`;
 	contenInfo += contentInfoFirst + contentTable1 + contentTable2 + contentInfoSecond;
 
+	console.log(contenInfo)
 	let contentAll = contentTitel + contentWork + contenInfo + contentForm;
 	return contentAll;
 }
@@ -298,6 +299,11 @@ function createContentInfo(object) {
 
 function create_info_div(id, array) {
 	let block = document.querySelector('.info');
+	if (myObject != null) {
+		myObject = {'object': myObject}
+		block.innerHTML = createContentInfo(myObject);
+		return
+	}
 	block.innerHTML = ''
 	let object;
 	for (let item of array){
@@ -331,12 +337,8 @@ function init() {
     objectManager.objects.options.set("iconContentOffset", [15, 15])
     objectManager.objects.events.add('click', function (event) {
         let obj = objectManager.objects.getById(event.get('objectId'))
-		let array = []
-		array += {object: obj};
 		console.log(obj)
-		console.log(obj.id, array);
-		pointBlock.classList.add('active')
-		createInfo(obj.id, array);
+		create_info_div(null,null, obj)
     })
     myMap.geoObjects.add(objectManager);
 
