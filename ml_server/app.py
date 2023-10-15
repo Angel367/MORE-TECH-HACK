@@ -1,6 +1,7 @@
 import atexit
 import csv
 import json
+from flask_cors import CORS
 
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -10,6 +11,7 @@ from models import *
 from panda import *
 
 app = Flask(__name__)
+CORS(app)
 app.config.from_pyfile('config.py')
 BASE_path = ''
 POINT_TYPE = [
