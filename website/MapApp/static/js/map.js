@@ -1,5 +1,5 @@
 let userStatus = null;
-let havQueue = false;
+
 
 const buttonEnter = document.querySelector('.button--enter');
 const buttonQueue = document.querySelector('.button--queue');
@@ -35,8 +35,11 @@ buttonExit.onclick = () => {
 	buttonSingInd.classList.remove('active');
 
 
-	filterBlock.classList.remove('active');
-	singIndiv = false;
+	indivObject.closeForm();
+	indivObject.setFlag(false);
+
+	legalObject.closeForm();
+	legalObject.setFlag(false);
 
 	document.querySelector('.info__form--legal').classList.remove('active');
 	document.querySelector('.info__form--individual').classList.remove('active');
@@ -108,11 +111,11 @@ function createInfo(id, array, obj) {
 	infoBlock.classList.add('active');
 	document.querySelector('.info__form--legal').classList.remove('active');
 	document.querySelector('.info__form--individual').classList.remove('active');
-	if (singIndiv) {
+	if (indivObject.getFlag()) {
 		document.querySelector('.info__form--individual').classList.add('active');
 		entryQueueIndiv();
 	}
-	if (singLegal) {
+	if (legalObject.getFlag()) {
 		document.querySelector('.info__form--legal').classList.add('active');
 		entryQueueLegal();
 	}
@@ -138,11 +141,10 @@ function createContentInfo(object) {
 			<ul class="info__table">`;
 		for (let item of object['object'].open_hours) {
 			contentTable1 += `
-			<li class="info__table-row">
-				<p class="info__table-title">` + item['days'] + `</p>
-				<p class="info__table-text">` + item['hours'] + `</p>
-			</li>
-		`
+				<li class="info__table-row">
+					<p class="info__table-title">` + item['days'] + `</p>
+					<p class="info__table-text">` + item['hours'] + `</p>
+				</li>`;
 		}
 		contentTable1 += `</ul></li>`;
 		contentTable2 = `<li class="info__item info__item--big">
@@ -159,27 +161,27 @@ function createContentInfo(object) {
 
 
 		contentInfoSecond = `
-		<li class="info__item">
-			<p class="info__item-title">РКО:</p>
-			<p class="info__item-text">` + (object['object'].isRKO ? "Да" : "Нет") + `</p>
-		</li>
-		<li class="info__item">
-			<p class="info__item-title">Тип офиса:</p>
-			<p class="info__item-text">` + (object['object'].office_type) + `</p>
-		</li>		
-		<li class="info__item">
-			<p class="info__item-title">Наличие пандуса:</p>
-			<p class="info__item-text">` + (object['object'].services.includes("hasRamp") ? "Да" : "Нет") + `</p>
-		</li></ul>`;
+			<li class="info__item">
+				<p class="info__item-title">РКО:</p>
+				<p class="info__item-text">` + (object['object'].isRKO ? "Да" : "Нет") + `</p>
+			</li>
+			<li class="info__item">
+				<p class="info__item-title">Тип офиса:</p>
+				<p class="info__item-text">` + (object['object'].office_type) + `</p>
+			</li>		
+			<li class="info__item">
+				<p class="info__item-title">Наличие пандуса:</p>
+				<p class="info__item-text">` + (object['object'].services.includes("hasRamp") ? "Да" : "Нет") + `</p>
+			</li></ul>`;
 		contentForm = `
-		<form class="info__form info__form--individual">
-			<h2 class="title title--margin-bottom">Хотите встать в очередь?</h2>
-			<button class="button button--individual-before" type="button">Предзапись</button>
-			<button class="button buttop--individual-stand" type="button">Встать в очередь</button>
-		</form>
-		<form class="info__form info__form--legal">
-			<button class="button button--legal" type="button">Менеджеры этого отделения</button>
-		</form>`;
+			<form class="info__form info__form--individual">
+				<h2 class="title title--margin-bottom">Хотите встать в очередь?</h2>
+				<button class="button button--individual-before" type="button">Предзапись</button>
+				<button class="button buttop--individual-stand" type="button">Встать в очередь</button>
+			</form>
+			<form class="info__form info__form--legal">
+				<button class="button button--legal" type="button">Менеджеры этого отделения</button>
+			</form>`;
 	} else {
 		contentTable2 = `<li class="info__item info__item--big">
 			<p class="info__item-title info__item-title--table">Услуги:</p>
@@ -192,55 +194,57 @@ function createContentInfo(object) {
 		}
 		contentTable2 += `</ul></li>`;
 	}
-
+	let arrayWork = [
+		{
+			'hour' : 9,
+			'work' : 0,
+		},
+		{
+			'hour' : 10,
+			'work' : 0,
+		},
+		{
+			'hour' : 11,
+			'work' : 0,
+		},
+		{
+			'hour' : 12,
+			'work' : 0,
+		},
+		{
+			'hour' : 13,
+			'work' : 1,
+		},
+		{
+			'hour' : 14,
+			'work' : 2,
+		},
+		{
+			'hour' : 15,
+			'work' : 2,
+		},
+		{
+			'hour' : 16,
+			'work' : 2,
+		},
+		{
+			'hour' : 17,
+			'work' : 1,
+		},
+	]
 	let image_num = 0;
 	let contentWork = `
-	<div class="point__work">
-		<h4 class="point__work-title">Загруженность</h4>
-		<ul class="point__work-list">
+		<div class="point__work">
+			<h4 class="point__work-title">Загруженность</h4>
+			<ul class="point__work-list">`;
+	for (let item of arrayWork) {
+		contentWork+=`
 			<li class="point__work-item">
-				<img class="point__work-svg" src="static/images/work-item/` + image_num + `.svg" alt="">
-				<p class="point__work-text">9</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src="static/images/work-item/` + 2 + `.svg" alt="">
-				<p class="point__work-text">10</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src="static/images/work-item/` + image_num + `.svg" alt="">
-				<p class="point__work-text">11</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src="static/images/work-item/` + image_num + `.svg" alt="">
-				<p class="point__work-text">12</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src="static/images/work-item/` + image_num + `.svg" alt="">
-				<p class="point__work-text">13</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src="static/images/work-item/` + image_num + `.svg" alt="">
-				<p class="point__work-text">14</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src="static/images/work-item/` + image_num + `.svg" alt="">
-				<p class="point__work-text">15</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src="static/images/work-item/` + image_num + `.svg" alt="">
-				<p class="point__work-text">16</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src="static/images/work-item/` + image_num + `.svg" alt="">
-				<p class="point__work-text">17</p>
-			</li>
-			<li class="point__work-item">
-				<img class="point__work-svg" src="static/images/work-item/` + image_num + `.svg" alt="">
-				<p class="point__work-text">18</p>
-			</li>
-		</ul>
-	</div>
-	`;
+				<img class="point__work-svg" src="static/images/work-item/` + item.work + `.svg" alt="">
+				<p class="point__work-text">`+item.hour+`</p>
+			</li>`;
+	}
+	contentWork += `</ul></div>`;
 
 	let contentInfoFirst = `
 		<li class="info__item">
@@ -252,7 +256,6 @@ function createContentInfo(object) {
 	let contenInfo = `<ul class="info__list scroll">`;
 	contenInfo += contentInfoFirst + contentTable1 + contentTable2 + contentInfoSecond;
 
-	console.log(contenInfo)
 	let contentAll = contentTitel + contentWork + contenInfo + contentForm;
 	return contentAll;
 }
@@ -424,37 +427,75 @@ function office_radio_handler(objectManager) {
 
 //физики
 
-let singIndiv = false;
-
-
-const filterBlock = document.querySelector('.filter');
-
-buttonSingInd.onclick = () => {
-	if (havQueue) {
-		queueBlock.classList.add('active');
-		return
+class GetBlock {
+	constructor(button, form, cross) {
+		this.button = button;
+		this.form = form;
+		this.cross = cross;
+		this.flag = false;
+		this.init();
 	}
-	if (!filterBlock.classList.contains('active')) {
-		singIndiv = true;
-		filterBlock.classList.add('active');
-		pointBlock.classList.remove('active');
-		pointArrow.classList.remove('active');
-		pointArrow.classList.add('rotate');
-		infoBlock.classList.remove('active');
+	init(){
+		this.openFormBtn();
+		this.closeFormCross();
 	}
+	setFlag(flag){
+		this.flag = flag;
+	}
+
+	getFlag() {
+		return this.flag;
+	}
+
+	openFormBtn(){
+		const buttonBlock = document.querySelector(this.button);
+		const formBlock = document.querySelector(this.form);
+		buttonBlock.onclick = () => {
+			if (queueObject.getHaveQueue()) {
+				queueObject.openQueue();
+				return;
+			}
+			if (!formBlock.classList.contains('active')) {
+
+				this.setFlag(true);
+				queueObject.closeQueue();
+				formBlock.classList.add('active');
+				pointBlock.classList.remove('active');
+				pointArrow.classList.remove('active');
+				pointArrow.classList.add('rotate');
+				infoBlock.classList.remove('active');
+			}
+		}
+	}
+	closeFormCross(){
+		const crossBlock = document.querySelector(this.cross);
+		const formBlock = document.querySelector(this.form);
+		crossBlock.onclick = () => {
+			formBlock.classList.remove('active');
+			this.setFlag(false);
+		}
+	}
+	openForm() {
+		const formBlock = document.querySelector(this.form);
+		formBlock.classList.add("active")
+	}
+	closeForm() {
+		const formBlock = document.querySelector(this.form);
+		formBlock.classList.remove("active")
+	}
+
 }
+
+const indivObject = new GetBlock('.button__sing-up--individual','.filter', '.cross--filter');
+const legalObject = new GetBlock('.button__sing-up--legal', '.legal','.cross--legal' );
+
 
 const buttonPoint = document.querySelector('.button--point');
-const crossFilter = document.querySelector('.cross--filter');
 const buttonFilter = document.querySelector('.button--filter');
 
-crossFilter.onclick = () => {
-	filterBlock.classList.remove('active');
-	singIndiv = false;
-}
 
 buttonFilter.onclick = () => { //buttonOtherLegal
-	filterBlock.classList.remove('active');
+	indivObject.closeForm();
 	pointBlock.classList.add('active');
 	pointArrow.classList.add('active');
 	pointArrow.classList.remove('rotate');
@@ -462,61 +503,30 @@ buttonFilter.onclick = () => { //buttonOtherLegal
 }
 
 buttonPoint.onclick = () => {
-	if (singIndiv) {
-		filterBlock.classList.add('active');
-		pointBlock.classList.remove('active');
-		pointArrow.classList.remove('active');
-		pointArrow.classList.add('rotate');
-		infoBlock.classList.remove('active');
+	if (indivObject.getFlag()) {
+		indivObject.openForm();
 	}
-	if (singLegal) {
-		legalBlock.classList.add('active');
-		pointBlock.classList.remove('active');
-		pointArrow.classList.remove('active');
-		pointArrow.classList.add('rotate');
-		infoBlock.classList.remove('active');
+	if (legalObject.getFlag()) {
+		legalObject.openForm();
 	}
+	pointBlock.classList.remove('active');
+	pointArrow.classList.remove('active');
+	pointArrow.classList.add('rotate');
+	infoBlock.classList.remove('active');
 }
 
-//юрлица
 
-
-let singLegal = false;
-
-const legalBlock = document.querySelector('.legal');
-
-buttonSingLeg.onclick = () => {
-	if (havQueue) {
-		queueBlock.classList.add('active');
-		return
-	}
-	if (!legalBlock.classList.contains('active')) {
-		singLegal = true;
-		legalBlock.classList.add('active');
-		pointBlock.classList.remove('active');
-		pointArrow.classList.remove('active');
-		pointArrow.classList.add('rotate');
-		infoBlock.classList.remove('active');
-	}
-}
-
-const crossLegal = document.querySelector('.cross--legal');
-const buttonSingLegal = document.querySelector('.button--legal-sing')
+const buttonSingLegalPrime = document.querySelector('.button--legal-sing')
 const buttonOtherLegal = document.querySelector('.button--legal-other')
 
-crossLegal.onclick = () => {
-	legalBlock.classList.remove('active');
-	singIndiv = false;
-}
-
-buttonSingLegal.onclick = () => {
-	legalBlock.classList.remove('active');
-	havQueue = true;
-	queueBlock.classList.add('active');
+buttonSingLegalPrime.onclick = () => {
+	legalObject.closeForm();
+	queueObject.setStatus("legal");
+	queueObject.openQueue()
 }
 
 buttonOtherLegal.onclick = () => {
-	legalBlock.classList.remove('active');
+	legalObject.closeForm();
 	pointBlock.classList.add('active');
 	pointArrow.classList.add('active');
 	pointArrow.classList.remove('rotate');
@@ -551,12 +561,12 @@ function entryQueueIndiv() {
 
 	crossIndiv.onclick = () => {
 		beforeIndivBlock.classList.remove('active');
-		singIndiv = false;
+		indivObject.setFlag(false);
 	}
 	buttonIndiv.onclick = () => {
 		beforeIndivBlock.classList.remove('active');
-		havQueue = true;
-		queueBlock.classList.add('active');
+		queueObject.setStatus("indiv");
+		queueObject.openQueue();
 	}
 
 	buttonStandIndiv.onclick = () => {
@@ -564,8 +574,8 @@ function entryQueueIndiv() {
 		pointArrow.classList.remove('active');
 		pointArrow.classList.add('rotate');
 		infoBlock.classList.remove('active');
-		havQueue = true;
-		queueBlock.classList.add('active');
+		queueObject.setStatus("indiv");
+		queueObject.openQueue()
 	}
 }
 
@@ -595,27 +605,91 @@ function entryQueueLegal() {
 
 	crossLegalOther.onclick = () => {
 		legalOtherBlock.classList.remove('active');
-		singIndiv = false;
+		legalObject.setFlag(false);
 	}
 
 	buttonLegalOther.onclick = () => {
 		legalOtherBlock.classList.remove('active');
-		havQueue = true;
-		queueBlock.classList.add('active');
+		queueObject.setStatus("legal");
+		queueObject.openQueue()
 	}
 
 }
 
+class Queue {
+	constructor(button, block, cross, status) {
+		this.button = button;
+		this.block = block;
+		this.cross = cross;
+		this.status = status;
+		this.init();
+	}
+	init(){
+		this.openQueueBtn();
+		this.closeQueueCross();
+		this.setStatus("");
+	}
+	openQueueBtn(){
+		const buttonBlock = document.querySelector(this.button);
+		const queueBlock = document.querySelector(this.block);
+		buttonBlock.onclick = () => {
+			queueBlock.classList.add('active');
+		}
+	}
+	closeQueueCross(){
+		const crossBlock = document.querySelector(this.cross);
+		const queueBlock = document.querySelector(this.block);
+		crossBlock.onclick = () => {
+			queueBlock.classList.remove('active');
+		}
+	}
+	openQueue(){
+		const queueBlock = document.querySelector(this.block);
+		queueBlock.classList.add('active');
+	}
+	closeQueue(){
+		const queueBlock = document.querySelector(this.block);
+		queueBlock.classList.remove('active');
+	}
+	setStatus(status){
+		this.status = status;
+		const queueNone = document.querySelector(".queue__none"); //нет очередей
+		const queueDone = document.querySelector(".queue__done"); //после скана qr
+		const queueHave = document.querySelector(".queue__have"); //в очереди
+		const queueIndiv = document.querySelector(".queue__have-indiv"); //в очереди физик
+		const queueLegal = document.querySelector(".queue__have-legal") //заранее
+		queueNone.classList.remove("active")
+		queueDone.classList.remove("active")
+		queueHave.classList.remove("active")
+		queueIndiv.classList.remove("active")
+		queueLegal.classList.remove("active")
+		if (status === "") {
+			queueNone.classList.add("active")
+		} else if (status === "legal"){
+			queueHave.classList.add("active");
+			queueLegal.classList.add("active");
+		} else if (status === "indiv") {
+			queueHave.classList.add("active");
+			queueIndiv.classList.add("active");
+			this.getDoneQueue()
+		} else if (status === "done") {
+			queueDone.classList.add("active");
+		}
+	}
 
-//очередь
+	getDoneQueue(btn){
+		let button = document.querySelector(".queue__photo");
+		button.onclick = () => {
+			this.setStatus("done")
+		}
+	}
+	getHaveQueue(){
+		return this.status !== "";
+	}
 
-const queueBlock = document.querySelector('.queue');
-const crossQueue = document.querySelector('.cross--queue')
-
-buttonQueue.onclick = () => {
-	queueBlock.classList.add('active');
 }
 
-crossQueue.onclick = () => {
-	queueBlock.classList.remove('active');
-}
+const queueObject = new Queue('.button--queue', '.queue', '.cross--queue', "");
+
+
+

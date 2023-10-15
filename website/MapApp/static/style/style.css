@@ -498,3 +498,21 @@
 .queue.active{
 	display: block;
 }
+
+.queue__none,
+.queue__have,
+.queue__have-indiv,
+.queue__have-legal,
+.queue__done{
+	display: none;
+}
+
+
+
+.queue__none.active,
+.queue__have.active,
+.queue__have-indiv.active,
+.queue__have-legal.active,
+.queue__done.active{
+	display: block;
+}

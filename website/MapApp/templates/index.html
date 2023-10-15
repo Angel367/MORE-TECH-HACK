@@ -17,7 +17,7 @@
     <div class="header__radio">
         <img class="header__img" src={% static 'images/VTB-night.svg' %} alt="">
         <label class="header__label">
-            <input class="header__radio-real header__radio-real--atms" type="radio" name="choice">
+            <input class="header__radio-real header__radio-real--atms" type="radio" name="choice" checked>
             <div class="header__radio-custom">Банкоматы</div>
         </label>
         <label class="header__label">
@@ -110,12 +110,10 @@
             </button>
         </form>
         <ul class="point__list scroll">
-
         </ul>
         <button class="button button--point" type='button'>Изменить фильтры</button>
     </aside>
     <div class="info">
-
     </div>
     <form class="legal">
         <div class="title-block">
@@ -418,11 +416,11 @@
             <h2 class="title">Очередь</h2>
             <img class="cross cross--queue" src={% static '/images/cross.svg' %} alt="">
         </div>
-        <!-- <div class="queue__none">
+        <div class="queue__none">
             <p class="text">У вас нет очередей!</p>
-        </div> -->
+        </div>
         <div class="queue__have">
-            <p class="text">Подойдите в отделение банка 15 октября 3 к 15:30</p>
+            <p class="text">Подойдите в отделение банка 15 октября к 15:30</p>
             <p class="text">Адрес: 141506, Московская область, г. Солнечногорск, ул. Красная, д. 60</p>
             <p class="text">Услуга: Услуга 1</p>
             <button class="button" type="button">Построить маршрут</button>
@@ -431,14 +429,14 @@
                 <p class="text">Для этого отсканируйте QR-код в терминале банка.</p>
                 <img class="queue__photo" src={% static '/images/photo.svg' %} alt="">
             </div>
-            <!-- <div class="queue__have-legal">
+            <div class="queue__have-legal">
                 <button class="button" type="button">Напомнить</button>
-            </div> -->
+            </div>
         </div>
-        <!-- <div class="queue__done">
+        <div class="queue__done">
             <p class="text">Ваш талон № А081</p>
             <p class="text">Скоро вас вызовут!</p>
-        </div> -->
+        </div>
     </aside>
 </main>
 <!--<footer class="footer">-->
