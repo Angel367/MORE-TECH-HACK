@@ -100,25 +100,32 @@ function update_point__list(map, objects, userCoords) {
 }
 
 
-function createInfo(id, array, obj) {
-	pointBlock.classList.add('active');
-	infoBlock.classList.add('active');
-	create_info_div(id, array, obj);
-	let infoArrow = document.querySelector('.info__title-svg');
-	infoArrow.onclick = () => {
-		infoBlock.classList.remove('active');
-	}
-	infoBlock.classList.add('active');
-	document.querySelector('.info__form--legal').classList.remove('active');
-	document.querySelector('.info__form--individual').classList.remove('active');
-	if (indivObject.getFlag()) {
-		document.querySelector('.info__form--individual').classList.add('active');
-		entryQueueIndiv();
-	}
-	if (legalObject.getFlag()) {
-		document.querySelector('.info__form--legal').classList.add('active');
-		entryQueueLegal();
-	}
+async function createInfo(id, array, obj) {
+    request_url = 'http://127.0.0.1:5001/get_office?BankID=15&FunctionList=1&Time=3&Day=1'
+    let neuro_data = await fetch(request_url)
+        .then((response) => response.json())
+        .then((data) => {
+            return data
+        })
+    console.log(neuro_data)
+    pointBlock.classList.add('active');
+    infoBlock.classList.add('active');
+    create_info_div(id, array, obj);
+    let infoArrow = document.querySelector('.info__title-svg');
+    infoArrow.onclick = () => {
+        infoBlock.classList.remove('active');
+    }
+    infoBlock.classList.add('active');
+    document.querySelector('.info__form--legal').classList.remove('active');
+    document.querySelector('.info__form--individual').classList.remove('active');
+    if (indivObject.getFlag()) {
+        document.querySelector('.info__form--individual').classList.add('active');
+        entryQueueIndiv();
+    }
+    if (legalObject.getFlag()) {
+        document.querySelector('.info__form--legal').classList.add('active');
+        entryQueueLegal();
+    }
 }
 
 function createContentInfo(object) {

@@ -1,0 +1,40 @@
+version: '3'
+services:
+  django_server:
+    build:
+      context: .
+      dockerfile: Dockerfile-DjangoServer
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./website:/app
+    depends_on:
+      - ml_server
+      - vtb_api_mock
+    networks:
+      - my_network
+
+  ml_server:
+    build:
+      context: .
+      dockerfile: Dockerfile-MLServer
+    volumes:
+      - ./ml_server:/app
+    ports:
+      - "5001:5001"
+    networks:
+      - my_network
+
+  vtb_api_mock:
+    build:
+      context: .
+      dockerfile: Dockerfile-VTBAPIMock
+    volumes:
+      - ./vtb-api-mock:/app
+    ports:
+      - "5000:5000"
+    networks:
+      - my_network
+
+networks:
+  my_network:
